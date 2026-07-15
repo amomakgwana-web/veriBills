@@ -1,0 +1,29 @@
+/* Mirrors @veribills/ui-kit's GLOBAL_CSS (tokens.ts) — duplicated here as
+   static CSS so the root layout can import it directly without a
+   client-side <style> injection flash on first paint. */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: #080808;
+  color: #f0f0f0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: #ff7a2e;
+}
+button {
+  font-family: inherit;
+}
+input,
+select,
+textarea {
+  font-family: inherit;
+}

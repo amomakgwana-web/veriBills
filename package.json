@@ -1,0 +1,20 @@
+{
+  "name": "veribills-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "veriBills.com — tenant/landlord/estate billing platform (xBilling, xUtilities, xLayer) — single-file frontend, Supabase backend",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "setup": "node scripts/setup-env.mjs && pnpm install",
+    "build": "pnpm -r --workspace-concurrency=1 run build",
+    "dev": "pnpm --filter @veribills/web-platform run dev",
+    "typecheck": "pnpm -r run typecheck",
+    "clean": "pnpm -r run clean"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "packageManager": "pnpm@10.33.0"
+}
