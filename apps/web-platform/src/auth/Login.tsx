@@ -3,14 +3,13 @@
 import { useState, type FormEvent } from "react";
 import type { VbRole } from "@veribills/shared-types";
 import { Button, Card, Input, T } from "@veribills/ui-kit";
-import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "./AuthContext";
 import { ROLE_META } from "./session";
 
 // Demo credentials from db/006_seed_demo_users.sql — quick sign-in while
-// veriBills has no self-registration (Section 3.3) and Microsoft SSO
-// hasn't been configured for this project yet. SysAdmin is first/default
-// since it's the broadest-access role, useful for exploring every area.
+// veriBills has no self-registration (Section 3.3). SysAdmin is
+// first/default since it's the broadest-access role, useful for exploring
+// every area.
 const DEMO_ACCOUNTS: Array<{ role: VbRole; email: string; password: string }> = [
   { role: "sysadmin", email: "sysadmin@veribills.demo", password: "SysAdmin!2026" },
   { role: "landlord", email: "landlord@veribills.demo", password: "Landlord!2026" },
@@ -44,22 +43,6 @@ export function Login() {
     await runLogin(email, password, "manual");
   };
 
-  const signInWithMicrosoft = async () => {
-    setError(null);
-    setBusy("microsoft");
-    try {
-      const { error: oauthError } = await supabase.auth.signInWithOAuth({
-        provider: "azure",
-        options: { redirectTo: typeof window !== "undefined" ? `${window.location.origin}/login` : undefined },
-      });
-      if (oauthError) throw new Error(oauthError.message);
-      // Browser redirects to Microsoft here; nothing left to do client-side.
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Microsoft sign-in failed");
-      setBusy(null);
-    }
-  };
-
   return (
     <div style={{ minHeight: "100%", display: "grid", placeItems: "center", padding: 24 }}>
       <Card style={{ width: 400 }}>
@@ -87,10 +70,6 @@ export function Login() {
             </Button>
           ))}
         </div>
-
-        <Button variant="secondary" disabled={busy !== null} onClick={signInWithMicrosoft} style={{ width: "100%", marginBottom: 12 }}>
-          {busy === "microsoft" ? "Redirecting…" : "Sign in with Microsoft"}
-        </Button>
 
         {error ? <div style={{ color: T.redT, fontSize: 13, marginBottom: 12 }}>{error}</div> : null}
 
