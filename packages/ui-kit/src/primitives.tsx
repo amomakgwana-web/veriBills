@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react";
 import { T } from "./tokens.js";
 
 export function Card({ children, style }: { children: ReactNode; style?: React.CSSProperties }) {
@@ -41,6 +41,24 @@ export function Button({
 export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
+      {...props}
+      style={{
+        background: T.surf2,
+        border: `1px solid ${T.white5}`,
+        borderRadius: 8,
+        padding: "10px 12px",
+        color: T.white,
+        fontSize: 14,
+        width: "100%",
+        ...props.style,
+      }}
+    />
+  );
+}
+
+export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <select
       {...props}
       style={{
         background: T.surf2,
