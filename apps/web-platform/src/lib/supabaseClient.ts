@@ -11,6 +11,9 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 const url = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim();
 const anonKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "").trim();
 
+/** The configured Supabase URL, exported for diagnostic error messages. */
+export const supabaseUrl = url;
+
 let client: SupabaseClient | null = null;
 
 function getClient(): SupabaseClient {
@@ -21,6 +24,19 @@ function getClient(): SupabaseClient {
         "NEXT_PUBLIC_SUPABASE_ANON_KEY in the Vercel project's Environment Variables (Production " +
         "environment included) and redeploy.",
     );
+  }
+  // A malformed URL is a common cause of an opaque `TypeError` at request
+  // time (supabase-js builds request URLs from this and `fetch`/`new URL`
+  // throws on a bad value). Validate up front so the failure names the
+  // offending value instead of surfacing as a bare "Type error".
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error(`NEXT_PUBLIC_SUPABASE_URL is not a valid URL: "${url}". Expected https://<project-ref>.supabase.co`);
+  }
+  if (parsed.protocol !== "https:") {
+    throw new Error(`NEXT_PUBLIC_SUPABASE_URL must start with https:// — got "${url}"`);
   }
   client = createClient(url, anonKey);
   return client;

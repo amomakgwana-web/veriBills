@@ -5,6 +5,7 @@ import type { VbRole } from "@veribills/shared-types";
 import { T } from "@veribills/ui-kit";
 import { useAuth } from "./AuthContext";
 import { ROLE_META } from "./session";
+import { supabaseUrl } from "../lib/supabaseClient";
 
 interface DemoAccount {
   role: VbRole;
@@ -104,7 +105,19 @@ export function Login() {
     try {
       await login(loginEmail, loginPassword);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      const msg = err instanceof Error ? err.message : "Login failed";
+      // A bare "Type error" / "Failed to fetch" / "Load failed" means the
+      // request never reached Supabase (malformed URL, or the network/ISP
+      // blocking the host). Surface the exact URL it tried so the real
+      // cause is visible instead of an opaque message.
+      if (/type error|failed to fetch|load failed|networkerror|network error/i.test(msg)) {
+        setError(
+          `Couldn't reach the sign-in server at ${supabaseUrl || "(no URL configured)"} — ${msg}. ` +
+            "This is a network or configuration issue, not a wrong password.",
+        );
+      } else {
+        setError(msg);
+      }
     } finally {
       setBusy(null);
     }
