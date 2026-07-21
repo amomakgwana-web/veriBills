@@ -97,10 +97,12 @@ export function Login() {
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [demoOpen, setDemoOpen] = useState(true);
+  const [debugDetail, setDebugDetail] = useState<string | null>(null);
 
   const runLogin = async (loginEmail: string, loginPassword: string, key: string) => {
     setError(null);
     setNotice(null);
+    setDebugDetail(null);
     setBusy(key);
     try {
       await login(loginEmail, loginPassword);
@@ -120,6 +122,22 @@ export function Login() {
           `Couldn't reach the sign-in server (configured for ${supabaseUrl || "no URL configured"}) — ${msg}. ` +
             "This is a network or configuration issue, not a wrong password.",
         );
+        // Safari/WebKit's literal "Type error" message is notoriously
+        // unspecific — it covers several distinct fetch()/Headers/Request
+        // construction failures, not just network blocks, and gives no
+        // detail on its own. console.error the raw error (DevTools can
+        // expand the object/stack) and also surface what we can read
+        // synchronously — name, message, stack, cause — directly in the
+        // UI, since asking someone to read their own DevTools has been the
+        // bottleneck diagnosing this so far.
+        console.error("veriBills login TypeError — raw error object:", err);
+        if (err instanceof Error) {
+          const parts = [`name: ${err.name}`, `message: ${err.message}`];
+          if (err.stack) parts.push(`stack:\n${err.stack}`);
+          const cause = (err as { cause?: unknown }).cause;
+          if (cause !== undefined) parts.push(`cause: ${String(cause)}`);
+          setDebugDetail(parts.join("\n\n"));
+        }
       } else {
         setError(msg);
       }
@@ -291,6 +309,25 @@ export function Login() {
         </form>
 
         {error ? <div style={{ color: T.redT, fontSize: 13, marginTop: 14 }}>{error}</div> : null}
+        {debugDetail ? (
+          <pre
+            style={{
+              marginTop: 8,
+              padding: 10,
+              background: T.surf3,
+              border: `1px solid ${T.white5}`,
+              borderRadius: 6,
+              fontSize: 11,
+              color: T.white3,
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+              maxHeight: 220,
+              overflowY: "auto",
+            }}
+          >
+            {debugDetail}
+          </pre>
+        ) : null}
         {notice ? <div style={{ color: T.white2, fontSize: 13, marginTop: 14 }}>{notice}</div> : null}
 
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 20, color: T.white4, fontSize: 12 }}>
