@@ -1,10 +1,29 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// `.trim()` is load-bearing, not cosmetic: pasting the anon key into a
+// Vercel env var very easily leaves a trailing newline, and supabase-js
+// puts that key into the `apikey` / `Authorization` request headers
+// verbatim. The Fetch API rejects any header value containing a newline
+// with an opaque `TypeError: Type error` — which surfaces as a "login
+// failed" with no useful message and never reaches the server, so it
+// leaves no auth log to diagnose from. Trimming here neutralises that at
+// the one point every request flows through.
+const url = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim();
+const anonKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "").trim();
 
-if (!url || !anonKey) {
-  throw new Error("NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY must be set — see .env.local.example");
+let client: SupabaseClient | null = null;
+
+function getClient(): SupabaseClient {
+  if (client) return client;
+  if (!url || !anonKey) {
+    throw new Error(
+      "veriBills is missing its Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and " +
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY in the Vercel project's Environment Variables (Production " +
+        "environment included) and redeploy.",
+    );
+  }
+  client = createClient(url, anonKey);
+  return client;
 }
 
 /**
@@ -15,5 +34,22 @@ if (!url || !anonKey) {
  * automatically). This project's Supabase instance is shared with an
  * unrelated product, but the vb_ prefix and this client only ever touch
  * veriBills' own schemas.
+ *
+ * Created lazily behind a Proxy so that merely *importing* this module can
+ * never throw. Next.js evaluates every client-component module during the
+ * static-prerender step of `next build`; a top-level `throw` there (the old
+ * behaviour when env vars were absent at build time) fails the whole
+ * production build. Prerender never actually *calls* Supabase — that only
+ * happens in the browser from a `useEffect` or an event handler — so
+ * deferring client creation to first use lets the build succeed while still
+ * giving a clear error if the app is ever used without configuration.
+ * Function properties are bound to the real client so supabase-js internals
+ * that rely on `this` (e.g. `supabase.from(...)`, `supabase.rpc(...)`) keep
+ * working through the Proxy.
  */
-export const supabase = createClient(url, anonKey);
+export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
+  get(_target, prop, receiver) {
+    const value = Reflect.get(getClient(), prop, receiver);
+    return typeof value === "function" ? value.bind(getClient()) : value;
+  },
+});
