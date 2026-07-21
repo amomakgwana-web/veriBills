@@ -11,7 +11,12 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 const url = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim();
 const anonKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "").trim();
 
-/** The configured Supabase URL, exported for diagnostic error messages. */
+/**
+ * The configured Supabase URL, exported for diagnostic error messages.
+ * This is the *real* supabase.co URL, not the same-origin proxy path the
+ * client actually requests through (see getClient() below) — it's shown to
+ * the user so a genuine misconfiguration still names the offending value.
+ */
 export const supabaseUrl = url;
 
 let client: SupabaseClient | null = null;
@@ -38,7 +43,18 @@ function getClient(): SupabaseClient {
   if (parsed.protocol !== "https:") {
     throw new Error(`NEXT_PUBLIC_SUPABASE_URL must start with https:// — got "${url}"`);
   }
-  client = createClient(url, anonKey);
+  // Route through this app's own origin (next.config.mjs rewrites
+  // /vbapi/* to the real Supabase URL, server-to-server) instead of
+  // requesting supabase.co directly from the browser. Some
+  // networks/extensions block *.supabase.co outright — the request never
+  // leaves the browser, and the Fetch API surfaces that as an opaque
+  // `TypeError`, indistinguishable from a real outage. Every request this
+  // client makes is same-origin from the browser's point of view, which
+  // sidesteps that whole class of block. Only applies in the browser
+  // (window is defined) — getClient() is never actually called during
+  // prerender (see the module doc below), so this never runs server-side.
+  const requestUrl = typeof window !== "undefined" ? `${window.location.origin}/vbapi` : url;
+  client = createClient(requestUrl, anonKey);
   return client;
 }
 

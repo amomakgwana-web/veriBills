@@ -107,12 +107,17 @@ export function Login() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Login failed";
       // A bare "Type error" / "Failed to fetch" / "Load failed" means the
-      // request never reached Supabase (malformed URL, or the network/ISP
-      // blocking the host). Surface the exact URL it tried so the real
-      // cause is visible instead of an opaque message.
+      // request never left the browser as a completed HTTP round-trip.
+      // Requests go through this app's own origin (/vbapi, proxied to
+      // Supabase server-to-server by next.config.mjs — see
+      // src/lib/supabaseClient.ts) specifically so a browser/network block
+      // on supabase.co can't cause this; if it still happens, the failure
+      // is same-origin (offline, or this deployment's own connectivity),
+      // not a third-party block. Surface the configured Supabase URL so a
+      // genuine misconfiguration is still visible.
       if (/type error|failed to fetch|load failed|networkerror|network error/i.test(msg)) {
         setError(
-          `Couldn't reach the sign-in server at ${supabaseUrl || "(no URL configured)"} — ${msg}. ` +
+          `Couldn't reach the sign-in server (configured for ${supabaseUrl || "no URL configured"}) — ${msg}. ` +
             "This is a network or configuration issue, not a wrong password.",
         );
       } else {
