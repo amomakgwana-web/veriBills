@@ -39,11 +39,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // same way. The returned tokens hydrate the client's own session via
     // setSession() so localStorage persistence/auto-refresh still work
     // exactly as before.
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    // Deliberately worded differently from anything app/api/login/route.ts
+    // itself returns: if this specific fetch() throws, the request never
+    // reached our server at all (this deployment has zero function
+    // invocation logs for that case), which is a materially different
+    // failure than the server receiving the request and rejecting it — and
+    // needs to look different in the UI, not just in our own investigation
+    // notes, so a report of one can't be mistaken for the other again.
+    let res: Response;
+    try {
+      res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+    } catch (err) {
+      console.error("veriBills login: could not reach this app's own /api/login route:", err);
+      throw new Error("Couldn't reach veriBills. Check your connection and try again.");
+    }
     const body = await res.json().catch(() => ({}));
     if (!res.ok || !body.access_token || !body.refresh_token) {
       throw new Error(body.error || `Sign-in failed (${res.status})`);
