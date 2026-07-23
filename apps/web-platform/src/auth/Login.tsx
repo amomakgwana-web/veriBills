@@ -104,6 +104,26 @@ export function Login() {
     setNotice(null);
     setDebugDetail(null);
     setBusy(key);
+
+    // @supabase/auth-js's _handleRequest (dist/main/lib/fetch.js) catches
+    // the raw fetch() rejection, does `console.error(e)` with the
+    // *untouched* original error, then discards it and re-throws a generic
+    // AuthRetryableFetchError carrying only `e.message` — which
+    // AuthContext.login then wraps *again* in a plain `new Error(...)`.
+    // By the time it reaches this catch block, both the real error's name
+    // and its stack are gone; "Type error" is all that survives. The only
+    // place the original error still exists is that internal console.error
+    // call, so intercept it for the duration of this one request to
+    // recover it.
+    let capturedRaw: unknown = null;
+    const originalConsoleError = console.error;
+    console.error = (...args: unknown[]) => {
+      if (capturedRaw === null && args.some((a) => a instanceof Error)) {
+        capturedRaw = args.find((a) => a instanceof Error);
+      }
+      originalConsoleError(...args);
+    };
+
     try {
       await login(loginEmail, loginPassword);
     } catch (err) {
@@ -122,26 +142,24 @@ export function Login() {
           `Couldn't reach the sign-in server (configured for ${supabaseUrl || "no URL configured"}) — ${msg}. ` +
             "This is a network or configuration issue, not a wrong password.",
         );
-        // Safari/WebKit's literal "Type error" message is notoriously
-        // unspecific — it covers several distinct fetch()/Headers/Request
-        // construction failures, not just network blocks, and gives no
-        // detail on its own. console.error the raw error (DevTools can
-        // expand the object/stack) and also surface what we can read
-        // synchronously — name, message, stack, cause — directly in the
-        // UI, since asking someone to read their own DevTools has been the
-        // bottleneck diagnosing this so far.
-        console.error("veriBills login TypeError — raw error object:", err);
+        const parts: string[] = [];
         if (err instanceof Error) {
-          const parts = [`name: ${err.name}`, `message: ${err.message}`];
-          if (err.stack) parts.push(`stack:\n${err.stack}`);
-          const cause = (err as { cause?: unknown }).cause;
-          if (cause !== undefined) parts.push(`cause: ${String(cause)}`);
-          setDebugDetail(parts.join("\n\n"));
+          parts.push(`wrapped — name: ${err.name}`, `wrapped — message: ${err.message}`);
         }
+        if (capturedRaw instanceof Error) {
+          parts.push(`raw fetch() error — name: ${capturedRaw.name}`, `raw fetch() error — message: ${capturedRaw.message}`);
+          if (capturedRaw.stack) parts.push(`raw fetch() error — stack:\n${capturedRaw.stack}`);
+          const rawCause = (capturedRaw as { cause?: unknown }).cause;
+          if (rawCause !== undefined) parts.push(`raw fetch() error — cause: ${String(rawCause)}`);
+        } else {
+          parts.push("(no raw error was captured via console.error — see browser DevTools console directly for this request)");
+        }
+        setDebugDetail(parts.join("\n\n"));
       } else {
         setError(msg);
       }
     } finally {
+      console.error = originalConsoleError;
       setBusy(null);
     }
   };
