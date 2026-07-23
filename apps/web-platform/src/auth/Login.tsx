@@ -5,7 +5,6 @@ import type { VbRole } from "@veribills/shared-types";
 import { T } from "@veribills/ui-kit";
 import { useAuth } from "./AuthContext";
 import { ROLE_META } from "./session";
-import { supabaseUrl } from "../lib/supabaseClient";
 
 interface DemoAccount {
   role: VbRole;
@@ -97,69 +96,25 @@ export function Login() {
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [demoOpen, setDemoOpen] = useState(true);
-  const [debugDetail, setDebugDetail] = useState<string | null>(null);
 
   const runLogin = async (loginEmail: string, loginPassword: string, key: string) => {
     setError(null);
     setNotice(null);
-    setDebugDetail(null);
     setBusy(key);
-
-    // @supabase/auth-js's _handleRequest (dist/main/lib/fetch.js) catches
-    // the raw fetch() rejection, does `console.error(e)` with the
-    // *untouched* original error, then discards it and re-throws a generic
-    // AuthRetryableFetchError carrying only `e.message` — which
-    // AuthContext.login then wraps *again* in a plain `new Error(...)`.
-    // By the time it reaches this catch block, both the real error's name
-    // and its stack are gone; "Type error" is all that survives. The only
-    // place the original error still exists is that internal console.error
-    // call, so intercept it for the duration of this one request to
-    // recover it.
-    let capturedRaw: unknown = null;
-    const originalConsoleError = console.error;
-    console.error = (...args: unknown[]) => {
-      if (capturedRaw === null && args.some((a) => a instanceof Error)) {
-        capturedRaw = args.find((a) => a instanceof Error);
-      }
-      originalConsoleError(...args);
-    };
-
     try {
       await login(loginEmail, loginPassword);
     } catch (err) {
+      // Full detail (message, stack, whatever the failure actually was)
+      // goes to the browser console only, never the page itself — a login
+      // screen must never surface backend URLs, stack traces, or library
+      // internals to whoever is using it, demo account or not. DevTools
+      // stays available for us; the UI only ever shows a plain, safe,
+      // actionable message.
+      console.error("veriBills login failed:", err);
       const msg = err instanceof Error ? err.message : "Login failed";
-      // A bare "Type error" / "Failed to fetch" / "Load failed" means the
-      // request never left the browser as a completed HTTP round-trip.
-      // Requests go through this app's own origin (/vbapi, proxied to
-      // Supabase server-to-server by next.config.mjs — see
-      // src/lib/supabaseClient.ts) specifically so a browser/network block
-      // on supabase.co can't cause this; if it still happens, the failure
-      // is same-origin (offline, or this deployment's own connectivity),
-      // not a third-party block. Surface the configured Supabase URL so a
-      // genuine misconfiguration is still visible.
-      if (/type error|failed to fetch|load failed|networkerror|network error/i.test(msg)) {
-        setError(
-          `Couldn't reach the sign-in server (configured for ${supabaseUrl || "no URL configured"}) — ${msg}. ` +
-            "This is a network or configuration issue, not a wrong password.",
-        );
-        const parts: string[] = [];
-        if (err instanceof Error) {
-          parts.push(`wrapped — name: ${err.name}`, `wrapped — message: ${err.message}`);
-        }
-        if (capturedRaw instanceof Error) {
-          parts.push(`raw fetch() error — name: ${capturedRaw.name}`, `raw fetch() error — message: ${capturedRaw.message}`);
-          if (capturedRaw.stack) parts.push(`raw fetch() error — stack:\n${capturedRaw.stack}`);
-          const rawCause = (capturedRaw as { cause?: unknown }).cause;
-          if (rawCause !== undefined) parts.push(`raw fetch() error — cause: ${String(rawCause)}`);
-        } else {
-          parts.push("(no raw error was captured via console.error — see browser DevTools console directly for this request)");
-        }
-        setDebugDetail(parts.join("\n\n"));
-      } else {
-        setError(msg);
-      }
+      const isInfraFailure = /type error|failed to fetch|load failed|networkerror|network error/i.test(msg);
+      setError(isInfraFailure ? "Couldn't sign in right now. Please try again in a moment, or contact IT Support if this persists." : msg);
     } finally {
-      console.error = originalConsoleError;
       setBusy(null);
     }
   };
@@ -327,25 +282,6 @@ export function Login() {
         </form>
 
         {error ? <div style={{ color: T.redT, fontSize: 13, marginTop: 14 }}>{error}</div> : null}
-        {debugDetail ? (
-          <pre
-            style={{
-              marginTop: 8,
-              padding: 10,
-              background: T.surf3,
-              border: `1px solid ${T.white5}`,
-              borderRadius: 6,
-              fontSize: 11,
-              color: T.white3,
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-word",
-              maxHeight: 220,
-              overflowY: "auto",
-            }}
-          >
-            {debugDetail}
-          </pre>
-        ) : null}
         {notice ? <div style={{ color: T.white2, fontSize: 13, marginTop: 14 }}>{notice}</div> : null}
 
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 20, color: T.white4, fontSize: 12 }}>

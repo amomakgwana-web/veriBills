@@ -23,21 +23,30 @@ function sanitize(value: string | undefined): string {
   return (value ?? "").replace(CONTROL_CHARS, "").trim();
 }
 
+// The one message shown to the caller for any failure that isn't a plain
+// wrong-email/wrong-password rejection from Supabase Auth itself — never the
+// backend name, a URL, or a raw Node/fetch error string. Full detail always
+// still goes to console.error, which lands in this deployment's own
+// server-side function logs (Vercel dashboard / MCP), never in the response
+// body a browser can render.
+const GENERIC_FAILURE = "Couldn't sign in right now. Please try again in a moment, or contact IT Support if this persists.";
+
 export async function POST(req: Request) {
   const supabaseUrl = sanitize(process.env.NEXT_PUBLIC_SUPABASE_URL);
   const anonKey = sanitize(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
   if (!supabaseUrl || !anonKey) {
-    return NextResponse.json({ error: "veriBills is missing its Supabase configuration on the server." }, { status: 500 });
+    console.error("veriBills /api/login: missing NEXT_PUBLIC_SUPABASE_URL/NEXT_PUBLIC_SUPABASE_ANON_KEY");
+    return NextResponse.json({ error: GENERIC_FAILURE }, { status: 500 });
   }
 
   let body: { email?: string; password?: string };
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
   if (!body.email || !body.password) {
-    return NextResponse.json({ error: "email and password are required" }, { status: 400 });
+    return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
   }
 
   let upstream: Response;
@@ -49,15 +58,22 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     // A genuine failure to reach Supabase from Vercel's own servers — real
-    // infrastructure issue, not a browser quirk, and worth knowing as such.
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: `This deployment could not reach Supabase: ${message}` }, { status: 502 });
+    // infrastructure issue, not a browser quirk, worth knowing as such, but
+    // only in our own logs.
+    console.error("veriBills /api/login: could not reach Supabase:", err);
+    return NextResponse.json({ error: GENERIC_FAILURE }, { status: 502 });
   }
 
   const data = await upstream.json().catch(() => null);
   if (!upstream.ok || !data) {
-    const message = (data && (data.error_description || data.msg || data.error)) || `Sign-in failed (${upstream.status})`;
-    return NextResponse.json({ error: message }, { status: upstream.status || 400 });
+    // Supabase Auth's own rejection reasons (wrong password, unconfirmed
+    // email, etc.) are written to be shown to the person signing in — pass
+    // those through as-is. Anything else (a malformed response, an
+    // unexpected status) gets the generic message instead of whatever raw
+    // text came back.
+    const knownAuthMessage = data && typeof data.error_description === "string" ? data.error_description : null;
+    if (!knownAuthMessage) console.error("veriBills /api/login: unexpected response from Supabase Auth:", upstream.status, data);
+    return NextResponse.json({ error: knownAuthMessage ?? GENERIC_FAILURE }, { status: upstream.status || 400 });
   }
 
   return NextResponse.json({ access_token: data.access_token, refresh_token: data.refresh_token });

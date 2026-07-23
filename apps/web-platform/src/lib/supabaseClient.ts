@@ -23,37 +23,34 @@ function sanitize(value: string | undefined): string {
 const url = sanitize(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const anonKey = sanitize(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
-/**
- * The configured Supabase URL, exported for diagnostic error messages.
- * This is the *real* supabase.co URL, not the same-origin proxy path the
- * client actually requests through (see getClient() below) — it's shown to
- * the user so a genuine misconfiguration still names the offending value.
- */
-export const supabaseUrl = url;
+// Never shown to a user — a misconfigured deployment is an operator
+// problem, not something to explain to whoever happens to load the page.
+// Full detail (which env var, what URL, why it's invalid) always goes to
+// console.error, reachable from DevTools/Vercel logs for us, not the DOM.
+const CONFIG_ERROR = "veriBills isn't available right now. Please contact IT Support.";
 
 let client: SupabaseClient | null = null;
 
 function getClient(): SupabaseClient {
   if (client) return client;
   if (!url || !anonKey) {
-    throw new Error(
-      "veriBills is missing its Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and " +
-        "NEXT_PUBLIC_SUPABASE_ANON_KEY in the Vercel project's Environment Variables (Production " +
-        "environment included) and redeploy.",
-    );
+    console.error("veriBills: missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY");
+    throw new Error(CONFIG_ERROR);
   }
   // A malformed URL is a common cause of an opaque `TypeError` at request
   // time (supabase-js builds request URLs from this and `fetch`/`new URL`
-  // throws on a bad value). Validate up front so the failure names the
-  // offending value instead of surfacing as a bare "Type error".
+  // throws on a bad value). Validate up front so at least *we* can tell
+  // what's wrong from the logs instead of chasing a bare "Type error".
   let parsed: URL;
   try {
     parsed = new URL(url);
   } catch {
-    throw new Error(`NEXT_PUBLIC_SUPABASE_URL is not a valid URL: "${url}". Expected https://<project-ref>.supabase.co`);
+    console.error(`veriBills: NEXT_PUBLIC_SUPABASE_URL is not a valid URL: "${url}"`);
+    throw new Error(CONFIG_ERROR);
   }
   if (parsed.protocol !== "https:") {
-    throw new Error(`NEXT_PUBLIC_SUPABASE_URL must start with https:// — got "${url}"`);
+    console.error(`veriBills: NEXT_PUBLIC_SUPABASE_URL must start with https:// — got "${url}"`);
+    throw new Error(CONFIG_ERROR);
   }
   // Route through this app's own origin (next.config.mjs rewrites
   // /vbapi/* to the real Supabase URL, server-to-server) instead of
