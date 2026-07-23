@@ -31,7 +31,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string): Promise<Session> => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    // Goes through this app's own /api/login route (Vercel Node.js
+    // runtime) instead of calling supabase.auth.signInWithPassword()
+    // directly from the browser — see app/api/login/route.ts for why:
+    // browser fetch() is no longer in the login path at all, only in
+    // this one plain same-origin POST, which every browser handles the
+    // same way. The returned tokens hydrate the client's own session via
+    // setSession() so localStorage persistence/auto-refresh still work
+    // exactly as before.
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok || !body.access_token || !body.refresh_token) {
+      throw new Error(body.error || `Sign-in failed (${res.status})`);
+    }
+    const { data, error } = await supabase.auth.setSession({
+      access_token: body.access_token,
+      refresh_token: body.refresh_token,
+    });
     if (error) throw new Error(error.message);
     const next = data.session ? sessionFromJwt(data.session.access_token) : null;
     if (!next) {

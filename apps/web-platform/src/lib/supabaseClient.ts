@@ -1,15 +1,27 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-// `.trim()` is load-bearing, not cosmetic: pasting the anon key into a
-// Vercel env var very easily leaves a trailing newline, and supabase-js
-// puts that key into the `apikey` / `Authorization` request headers
-// verbatim. The Fetch API rejects any header value containing a newline
-// with an opaque `TypeError: Type error` — which surfaces as a "login
-// failed" with no useful message and never reaches the server, so it
-// leaves no auth log to diagnose from. Trimming here neutralises that at
-// the one point every request flows through.
-const url = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim();
-const anonKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "").trim();
+const CONTROL_CHARS = new RegExp("[\\x00-\\x1f\\x7f]", "g");
+
+// Stripping control characters (not just trimming leading/trailing
+// whitespace) is load-bearing, not cosmetic: pasting the anon key into a
+// Vercel env var can leave a stray newline or other control character
+// *anywhere* in the string, not only at the ends (e.g. a soft line-wrap
+// artifact from whatever it was copied through) — plain `.trim()` only
+// ever catches the leading/trailing case. supabase-js puts this key into
+// the `apikey` / `Authorization` request headers verbatim, and the Fetch
+// API rejects any header value containing a control character with an
+// opaque `TypeError: Type error` — which surfaces as a "login failed" with
+// no useful message and never reaches the server, so it leaves no auth log
+// to diagnose from. Sanitising here neutralises that at the one point
+// every request flows through. Kept in sync with the equivalent check in
+// app/api/login/route.ts, which reads these same env vars independently
+// for the server-side login call.
+function sanitize(value: string | undefined): string {
+  return (value ?? "").replace(CONTROL_CHARS, "").trim();
+}
+
+const url = sanitize(process.env.NEXT_PUBLIC_SUPABASE_URL);
+const anonKey = sanitize(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
 /**
  * The configured Supabase URL, exported for diagnostic error messages.
