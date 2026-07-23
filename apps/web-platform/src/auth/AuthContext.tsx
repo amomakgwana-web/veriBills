@@ -19,15 +19,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session ? sessionFromJwt(data.session.access_token) : null);
-      setLoading(false);
-    });
+    // This runs on every page via the root layout — a config problem
+    // (missing/invalid NEXT_PUBLIC_SUPABASE_URL/ANON_KEY) makes
+    // supabaseClient.ts's getClient() throw the instant `supabase.auth` is
+    // touched, and with no error boundary that used to take the entire app
+    // down to Next's bare "Application error" screen on every single page,
+    // not just wherever auth was actually needed. A misconfigured backend
+    // should still let someone see *a* page (the login screen, in
+    // particular) rather than a dead app, so this degrades to "no session"
+    // instead of crashing — app/global-error.tsx is the real fallback for
+    // anything that isn't this specific, expected failure mode.
+    try {
+      supabase.auth.getSession().then(
+        ({ data }) => {
+          setSession(data.session ? sessionFromJwt(data.session.access_token) : null);
+          setLoading(false);
+        },
+        (err) => {
+          console.error("veriBills: getSession() failed:", err);
+          setLoading(false);
+        },
+      );
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
-      setSession(next ? sessionFromJwt(next.access_token) : null);
-    });
-    return () => sub.subscription.unsubscribe();
+      const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
+        setSession(next ? sessionFromJwt(next.access_token) : null);
+      });
+      return () => sub.subscription.unsubscribe();
+    } catch (err) {
+      console.error("veriBills: Supabase client unavailable:", err);
+      setLoading(false);
+      return undefined;
+    }
   }, []);
 
   const login = async (email: string, password: string): Promise<Session> => {
