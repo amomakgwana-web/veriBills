@@ -45,16 +45,33 @@ function getClient(): SupabaseClient {
   }
   // Route through this app's own origin (next.config.mjs rewrites
   // /vbapi/* to the real Supabase URL, server-to-server) instead of
-  // requesting supabase.co directly from the browser. Some
-  // networks/extensions block *.supabase.co outright — the request never
-  // leaves the browser, and the Fetch API surfaces that as an opaque
-  // `TypeError`, indistinguishable from a real outage. Every request this
-  // client makes is same-origin from the browser's point of view, which
-  // sidesteps that whole class of block. Only applies in the browser
-  // (window is defined) — getClient() is never actually called during
-  // prerender (see the module doc below), so this never runs server-side.
+  // requesting supabase.co directly from the browser. Only applies in the
+  // browser (window is defined) — getClient() is never actually called
+  // during prerender (see the module doc below), so this never runs
+  // server-side.
   const requestUrl = typeof window !== "undefined" ? `${window.location.origin}/vbapi` : url;
-  client = createClient(requestUrl, anonKey);
+  client = createClient(requestUrl, anonKey, {
+    global: {
+      // THE root cause of the login "Type error": @supabase/auth-js's
+      // resolveFetch() (dist/main/lib/helpers.js) falls back to
+      // `(...args) => fetch(...args)` — a *bare* call to the captured
+      // `fetch` reference, not `window.fetch(...)`/`globalThis.fetch(...)`.
+      // Chrome/Firefox's fetch() tolerates being invoked without its
+      // original receiver; Safari/WebKit's fetch() is spec'd to require
+      // `this` to be the real global object and throws exactly
+      // `TypeError: Type error` — no further detail — the instant it's
+      // called detached, before any network activity happens at all. That
+      // matches every symptom seen debugging this: Safari-only, zero
+      // Supabase logs ever (the call never leaves the JS engine), and
+      // identical whether the target was supabase.co directly or this
+      // app's own /vbapi proxy (the destination was never reached either
+      // way). supabase-js's own docs name this exact fix
+      // (SupabaseClient.ts's `global.fetch` option doc comment):
+      // `fetch.bind(globalThis)` keeps the receiver intact through every
+      // internal `(...args) => customFetch(...args)` re-wrap.
+      fetch: typeof window !== "undefined" ? window.fetch.bind(window) : fetch,
+    },
+  });
   return client;
 }
 
