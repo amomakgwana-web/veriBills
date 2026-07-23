@@ -1,44 +1,86 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-// `.trim()` is load-bearing, not cosmetic: pasting the anon key into a
-// Vercel env var very easily leaves a trailing newline, and supabase-js
-// puts that key into the `apikey` / `Authorization` request headers
-// verbatim. The Fetch API rejects any header value containing a newline
-// with an opaque `TypeError: Type error` — which surfaces as a "login
-// failed" with no useful message and never reaches the server, so it
-// leaves no auth log to diagnose from. Trimming here neutralises that at
-// the one point every request flows through.
-const url = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim();
-const anonKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "").trim();
+const CONTROL_CHARS = new RegExp("[\\x00-\\x1f\\x7f]", "g");
 
-/** The configured Supabase URL, exported for diagnostic error messages. */
-export const supabaseUrl = url;
+// Stripping control characters (not just trimming leading/trailing
+// whitespace) is load-bearing, not cosmetic: pasting the anon key into a
+// Vercel env var can leave a stray newline or other control character
+// *anywhere* in the string, not only at the ends (e.g. a soft line-wrap
+// artifact from whatever it was copied through) — plain `.trim()` only
+// ever catches the leading/trailing case. supabase-js puts this key into
+// the `apikey` / `Authorization` request headers verbatim, and the Fetch
+// API rejects any header value containing a control character with an
+// opaque `TypeError: Type error` — which surfaces as a "login failed" with
+// no useful message and never reaches the server, so it leaves no auth log
+// to diagnose from. Sanitising here neutralises that at the one point
+// every request flows through. Kept in sync with the equivalent check in
+// app/api/login/route.ts, which reads these same env vars independently
+// for the server-side login call.
+function sanitize(value: string | undefined): string {
+  return (value ?? "").replace(CONTROL_CHARS, "").trim();
+}
+
+const url = sanitize(process.env.NEXT_PUBLIC_SUPABASE_URL);
+const anonKey = sanitize(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
+// Never shown to a user — a misconfigured deployment is an operator
+// problem, not something to explain to whoever happens to load the page.
+// Full detail (which env var, what URL, why it's invalid) always goes to
+// console.error, reachable from DevTools/Vercel logs for us, not the DOM.
+const CONFIG_ERROR = "veriBills isn't available right now. Please contact IT Support.";
 
 let client: SupabaseClient | null = null;
 
 function getClient(): SupabaseClient {
   if (client) return client;
   if (!url || !anonKey) {
-    throw new Error(
-      "veriBills is missing its Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and " +
-        "NEXT_PUBLIC_SUPABASE_ANON_KEY in the Vercel project's Environment Variables (Production " +
-        "environment included) and redeploy.",
-    );
+    console.error("veriBills: missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY");
+    throw new Error(CONFIG_ERROR);
   }
   // A malformed URL is a common cause of an opaque `TypeError` at request
   // time (supabase-js builds request URLs from this and `fetch`/`new URL`
-  // throws on a bad value). Validate up front so the failure names the
-  // offending value instead of surfacing as a bare "Type error".
+  // throws on a bad value). Validate up front so at least *we* can tell
+  // what's wrong from the logs instead of chasing a bare "Type error".
   let parsed: URL;
   try {
     parsed = new URL(url);
   } catch {
-    throw new Error(`NEXT_PUBLIC_SUPABASE_URL is not a valid URL: "${url}". Expected https://<project-ref>.supabase.co`);
+    console.error(`veriBills: NEXT_PUBLIC_SUPABASE_URL is not a valid URL: "${url}"`);
+    throw new Error(CONFIG_ERROR);
   }
   if (parsed.protocol !== "https:") {
-    throw new Error(`NEXT_PUBLIC_SUPABASE_URL must start with https:// — got "${url}"`);
+    console.error(`veriBills: NEXT_PUBLIC_SUPABASE_URL must start with https:// — got "${url}"`);
+    throw new Error(CONFIG_ERROR);
   }
-  client = createClient(url, anonKey);
+  // Route through this app's own origin (next.config.mjs rewrites
+  // /vbapi/* to the real Supabase URL, server-to-server) instead of
+  // requesting supabase.co directly from the browser. Only applies in the
+  // browser (window is defined) — getClient() is never actually called
+  // during prerender (see the module doc below), so this never runs
+  // server-side.
+  const requestUrl = typeof window !== "undefined" ? `${window.location.origin}/vbapi` : url;
+  client = createClient(requestUrl, anonKey, {
+    global: {
+      // THE root cause of the login "Type error": @supabase/auth-js's
+      // resolveFetch() (dist/main/lib/helpers.js) falls back to
+      // `(...args) => fetch(...args)` — a *bare* call to the captured
+      // `fetch` reference, not `window.fetch(...)`/`globalThis.fetch(...)`.
+      // Chrome/Firefox's fetch() tolerates being invoked without its
+      // original receiver; Safari/WebKit's fetch() is spec'd to require
+      // `this` to be the real global object and throws exactly
+      // `TypeError: Type error` — no further detail — the instant it's
+      // called detached, before any network activity happens at all. That
+      // matches every symptom seen debugging this: Safari-only, zero
+      // Supabase logs ever (the call never leaves the JS engine), and
+      // identical whether the target was supabase.co directly or this
+      // app's own /vbapi proxy (the destination was never reached either
+      // way). supabase-js's own docs name this exact fix
+      // (SupabaseClient.ts's `global.fetch` option doc comment):
+      // `fetch.bind(globalThis)` keeps the receiver intact through every
+      // internal `(...args) => customFetch(...args)` re-wrap.
+      fetch: typeof window !== "undefined" ? window.fetch.bind(window) : fetch,
+    },
+  });
   return client;
 }
 

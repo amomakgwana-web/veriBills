@@ -5,7 +5,6 @@ import type { VbRole } from "@veribills/shared-types";
 import { T } from "@veribills/ui-kit";
 import { useAuth } from "./AuthContext";
 import { ROLE_META } from "./session";
-import { supabaseUrl } from "../lib/supabaseClient";
 
 interface DemoAccount {
   role: VbRole;
@@ -105,19 +104,16 @@ export function Login() {
     try {
       await login(loginEmail, loginPassword);
     } catch (err) {
+      // Full detail (message, stack, whatever the failure actually was)
+      // goes to the browser console only, never the page itself — a login
+      // screen must never surface backend URLs, stack traces, or library
+      // internals to whoever is using it, demo account or not. DevTools
+      // stays available for us; the UI only ever shows a plain, safe,
+      // actionable message.
+      console.error("veriBills login failed:", err);
       const msg = err instanceof Error ? err.message : "Login failed";
-      // A bare "Type error" / "Failed to fetch" / "Load failed" means the
-      // request never reached Supabase (malformed URL, or the network/ISP
-      // blocking the host). Surface the exact URL it tried so the real
-      // cause is visible instead of an opaque message.
-      if (/type error|failed to fetch|load failed|networkerror|network error/i.test(msg)) {
-        setError(
-          `Couldn't reach the sign-in server at ${supabaseUrl || "(no URL configured)"} — ${msg}. ` +
-            "This is a network or configuration issue, not a wrong password.",
-        );
-      } else {
-        setError(msg);
-      }
+      const isInfraFailure = /type error|failed to fetch|load failed|networkerror|network error/i.test(msg);
+      setError(isInfraFailure ? "Couldn't sign in right now. Please try again in a moment, or contact IT Support if this persists." : msg);
     } finally {
       setBusy(null);
     }
