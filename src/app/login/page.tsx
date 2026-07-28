@@ -83,7 +83,7 @@ export default async function LoginPage({
 
         <form
           action={signIn}
-          className="space-y-4 rounded-xl bg-white p-6 shadow-2xl ring-1 ring-black/5"
+          className="ring-white/60 space-y-4 rounded-2xl bg-white/80 p-6 shadow-[0_8px_40px_-8px_rgba(24,0,173,0.35)] ring-1 backdrop-blur-2xl backdrop-saturate-150"
         >
           <input type="hidden" name="next" value={params.next ?? ""} />
 
