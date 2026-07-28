@@ -301,7 +301,7 @@ export function buttonClass(
 }
 
 export const inputClass =
-  "border-brand-200 w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none";
+  "border-brand-200 min-h-[2.75rem] w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none";
 
 export const labelClass = "mb-1.5 block text-xs font-medium text-slate-600";
 
