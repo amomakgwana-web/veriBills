@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   },
   description:
     "Tenant and billing platform for estates, apartment blocks and commercial property.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1800ad",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -5,6 +5,7 @@ import type { SessionContext } from "@/lib/auth/session";
 import { SignOutButton } from "@/components/sign-out-button";
 import { ChatWidget } from "@/components/chat-widget";
 import { NavLink } from "@/components/nav-link";
+import { LogoMark } from "@/components/brand/logo-mark";
 import { cx } from "@/components/ui";
 
 export type NavItem = { href: string; label: string; badge?: number };
@@ -43,9 +44,7 @@ export function AppShell({
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
         <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3">
           <Link href={portalHref} className="flex shrink-0 items-center gap-2">
-            <span className="bg-brand-700 flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white">
-              vB
-            </span>
+            <LogoMark size="sm" />
             <span className="hidden text-sm font-semibold text-slate-900 sm:block dark:text-slate-100">
               veriBills
               <span className="ml-1.5 font-normal text-slate-400">{portalName}</span>
