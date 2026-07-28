@@ -120,7 +120,7 @@ export default async function ApplicationsPage({
                           className={
                             ratio > 33
                               ? "font-medium text-red-600 dark:text-red-400"
-                              : "text-emerald-600 dark:text-emerald-400"
+                              : "text-brand-600 dark:text-brand-400"
                           }
                         >
                           {formatNumber(ratio, 0)}%

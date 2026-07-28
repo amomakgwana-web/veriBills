@@ -62,7 +62,7 @@ export default async function FacilitiesPage({
       />
 
       {inArrears && (
-        <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
           Your account is in arrears. Facilities that require good standing are locked until the
           balance is settled.
         </div>
@@ -123,7 +123,7 @@ export default async function FacilitiesPage({
                   </div>
                 )}
                 {facility.requires_induction && !grant?.induction_completed_at && (
-                  <div className="text-amber-700 dark:text-amber-400">Induction required</div>
+                  <div className="text-red-700 dark:text-red-400">Induction required</div>
                 )}
               </dl>
 

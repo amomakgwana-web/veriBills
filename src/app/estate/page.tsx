@@ -200,19 +200,19 @@ export default async function EstateDashboard({
         <Card title="Debtor ageing" className="lg:col-span-1">
           <MiniBar
             segments={[
-              { label: "Current", value: ageing.current, className: "bg-emerald-500" },
-              { label: "30 days", value: ageing.d30, className: "bg-amber-400" },
-              { label: "60 days", value: ageing.d60, className: "bg-orange-500" },
-              { label: "90 days", value: ageing.d90, className: "bg-red-500" },
-              { label: "120+ days", value: ageing.d120, className: "bg-red-800" },
+              { label: "Current", value: ageing.current, className: "bg-brand-500" },
+              { label: "30 days", value: ageing.d30, className: "bg-slate-300" },
+              { label: "60 days", value: ageing.d60, className: "bg-red-300" },
+              { label: "90 days", value: ageing.d90, className: "bg-red-600" },
+              { label: "120+ days", value: ageing.d120, className: "bg-red-900" },
             ]}
           />
           <dl className="mt-4 space-y-2 text-sm">
-            <AgeRow label="Current" value={ageing.current} dot="bg-emerald-500" />
-            <AgeRow label="30 days" value={ageing.d30} dot="bg-amber-400" />
-            <AgeRow label="60 days" value={ageing.d60} dot="bg-orange-500" />
-            <AgeRow label="90 days" value={ageing.d90} dot="bg-red-500" />
-            <AgeRow label="120+ days" value={ageing.d120} dot="bg-red-800" />
+            <AgeRow label="Current" value={ageing.current} dot="bg-brand-500" />
+            <AgeRow label="30 days" value={ageing.d30} dot="bg-slate-300" />
+            <AgeRow label="60 days" value={ageing.d60} dot="bg-red-300" />
+            <AgeRow label="90 days" value={ageing.d90} dot="bg-red-600" />
+            <AgeRow label="120+ days" value={ageing.d120} dot="bg-red-900" />
           </dl>
         </Card>
 
@@ -356,7 +356,7 @@ export default async function EstateDashboard({
             <p className="text-xs tracking-wide text-slate-500 uppercase dark:text-slate-400">
               Delivered
             </p>
-            <p className="tabular mt-1 text-2xl font-semibold text-emerald-600 dark:text-emerald-400">
+            <p className="tabular mt-1 text-2xl font-semibold text-brand-600 dark:text-brand-400">
               {delivered}
             </p>
           </div>

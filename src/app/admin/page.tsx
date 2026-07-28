@@ -80,11 +80,11 @@ export default async function AdminOverview() {
       />
 
       {!hasServiceRole() && (
-        <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900 dark:bg-amber-950/40">
-          <p className="text-sm font-medium text-amber-900 dark:text-amber-200">
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900 dark:bg-red-950/40">
+          <p className="text-sm font-medium text-red-900 dark:text-red-200">
             Service role key not configured
           </p>
-          <p className="mt-0.5 text-sm text-amber-800 dark:text-amber-300">
+          <p className="mt-0.5 text-sm text-red-800 dark:text-red-300">
             Billing runs, payment settlement and prepaid token issue are disabled until{" "}
             <code>SUPABASE_SERVICE_ROLE_KEY</code> is set on the server.
           </p>

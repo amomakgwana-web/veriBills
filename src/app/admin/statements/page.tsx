@@ -158,7 +158,7 @@ export default async function StatementsPage({
                     align="right"
                     className={
                       entry.direction === "credit"
-                        ? "font-medium text-emerald-600 dark:text-emerald-400"
+                        ? "font-medium text-brand-600 dark:text-brand-400"
                         : ""
                     }
                   >

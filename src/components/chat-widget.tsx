@@ -72,7 +72,7 @@ export function ChatWidget({ userName }: { userName: string }) {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={open ? "Close support chat" : "Open support chat"}
-        className="from-brand-500 to-brand-800 ring-white/30 hover:from-brand-400 hover:to-brand-700 fixed right-5 bottom-5 z-40 flex h-13 w-13 items-center justify-center rounded-full bg-gradient-to-br p-3.5 text-white shadow-[0_8px_24px_-4px_rgba(24,0,173,0.5)] ring-1 transition"
+        className="bg-brand-700 hover:bg-brand-800 dark:bg-brand-600 fixed right-5 bottom-5 z-40 flex h-13 w-13 items-center justify-center rounded-full p-3.5 text-white shadow-lg transition"
       >
         {open ? (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -89,8 +89,8 @@ export function ChatWidget({ userName }: { userName: string }) {
       </button>
 
       {open && (
-        <div className="animate-in border-white/40 dark:border-white/10 fixed right-5 bottom-24 z-40 flex h-[26rem] w-[min(22rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border bg-white/80 shadow-[0_8px_40px_-8px_rgba(24,0,173,0.35)] backdrop-blur-2xl backdrop-saturate-150 dark:bg-slate-900/70">
-          <div className="bg-brand-700/90 px-4 py-3 text-white backdrop-blur">
+        <div className="animate-in border-brand-200 fixed right-5 bottom-24 z-40 flex h-[26rem] w-[min(22rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-xl border bg-white shadow-2xl">
+          <div className="bg-brand-700 px-4 py-3 text-white">
             <p className="text-sm font-semibold">veriBills assistant</p>
             <p className="text-brand-100 text-xs">Signed in as {userName}</p>
           </div>
@@ -105,7 +105,7 @@ export function ChatWidget({ userName }: { userName: string }) {
                   className={
                     message.role === "user"
                       ? "bg-brand-700 max-w-[85%] rounded-lg rounded-br-sm px-3 py-2 text-sm text-white"
-                      : "max-w-[85%] rounded-lg rounded-bl-sm bg-slate-100 px-3 py-2 text-sm text-slate-800 dark:bg-slate-800 dark:text-slate-200"
+                      : "max-w-[85%] rounded-lg rounded-bl-sm bg-slate-100 px-3 py-2 text-sm text-slate-800"
                   }
                 >
                   <p className="whitespace-pre-wrap">{message.body}</p>
@@ -115,7 +115,7 @@ export function ChatWidget({ userName }: { userName: string }) {
                         <a
                           key={action.href}
                           href={action.href}
-                          className="text-brand-700 dark:text-brand-300 rounded-full bg-white px-2 py-1 text-xs font-medium dark:bg-slate-900"
+                          className="text-brand-700 rounded-full bg-white px-2 py-1 text-xs font-medium"
                         >
                           {action.label}
                         </a>
@@ -129,13 +129,13 @@ export function ChatWidget({ userName }: { userName: string }) {
             <div ref={endRef} />
           </div>
 
-          <form onSubmit={send} className="flex gap-2 border-t border-slate-200 p-2 dark:border-slate-700">
+          <form onSubmit={send} className="flex gap-2 border-t border-slate-200 p-2">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask a question…"
               aria-label="Message"
-              className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none"
             />
             <button
               type="submit"

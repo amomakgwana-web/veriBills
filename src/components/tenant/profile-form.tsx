@@ -155,7 +155,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
       {state.status === "success" && (
         <p
           role="status"
-          className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300"
+          className="rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm text-brand-700 dark:border-brand-900 dark:bg-brand-950 dark:text-brand-300"
         >
           {state.message}
         </p>

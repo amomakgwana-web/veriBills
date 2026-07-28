@@ -102,7 +102,7 @@ export default async function CollectionsPage({
                         })}
                       </Td>
                       <Td align="right">{run.mandate_count}</Td>
-                      <Td align="right" className="text-emerald-600 dark:text-emerald-400">
+                      <Td align="right" className="text-brand-600 dark:text-brand-400">
                         {run.successful_count}
                       </Td>
                       <Td align="right" className="text-red-600 dark:text-red-400">

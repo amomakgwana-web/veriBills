@@ -137,7 +137,7 @@ export function BuyElectricityForm({ meters }: { meters: MeterOption[] }) {
               </div>
             </>
           ) : (
-            <p className="text-amber-700 dark:text-amber-300">
+            <p className="text-red-700 dark:text-red-300">
               This amount only covers the fixed charges. Increase it to buy units.
             </p>
           )}
