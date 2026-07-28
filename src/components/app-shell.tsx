@@ -41,7 +41,7 @@ export function AppShell({
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
+      <header className="border-white/40 dark:border-white/10 sticky top-0 z-30 border-b bg-white/60 shadow-[0_1px_0_0_rgba(255,255,255,0.5)_inset] backdrop-blur-xl backdrop-saturate-150 dark:bg-slate-900/50">
         <div className="from-brand-600 via-brand-500 to-brand-700 h-1 bg-gradient-to-r" />
 
         <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3">

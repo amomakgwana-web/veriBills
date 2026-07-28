@@ -72,7 +72,7 @@ export function ChatWidget({ userName }: { userName: string }) {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={open ? "Close support chat" : "Open support chat"}
-        className="bg-brand-700 hover:bg-brand-800 dark:bg-brand-600 fixed right-5 bottom-5 z-40 flex h-13 w-13 items-center justify-center rounded-full p-3.5 text-white shadow-lg transition"
+        className="from-brand-500 to-brand-800 ring-white/30 hover:from-brand-400 hover:to-brand-700 fixed right-5 bottom-5 z-40 flex h-13 w-13 items-center justify-center rounded-full bg-gradient-to-br p-3.5 text-white shadow-[0_8px_24px_-4px_rgba(24,0,173,0.5)] ring-1 transition"
       >
         {open ? (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -89,8 +89,8 @@ export function ChatWidget({ userName }: { userName: string }) {
       </button>
 
       {open && (
-        <div className="animate-in fixed right-5 bottom-24 z-40 flex h-[26rem] w-[min(22rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900">
-          <div className="bg-brand-700 px-4 py-3 text-white">
+        <div className="animate-in border-white/40 dark:border-white/10 fixed right-5 bottom-24 z-40 flex h-[26rem] w-[min(22rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border bg-white/80 shadow-[0_8px_40px_-8px_rgba(24,0,173,0.35)] backdrop-blur-2xl backdrop-saturate-150 dark:bg-slate-900/70">
+          <div className="bg-brand-700/90 px-4 py-3 text-white backdrop-blur">
             <p className="text-sm font-semibold">veriBills assistant</p>
             <p className="text-brand-100 text-xs">Signed in as {userName}</p>
           </div>
