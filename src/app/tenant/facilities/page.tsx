@@ -24,6 +24,10 @@ export default async function FacilitiesPage({
   const { session, unit } = await resolveUnit(searchParams);
   const supabase = await createClient();
 
+  // Async Server Component: renders once per request, so this is stable.
+  // eslint-disable-next-line react-hooks/purity
+  const bookingsSince = new Date(Date.now() - 7 * 86400_000).toISOString();
+
   const [facilities, grants, bookings] = await Promise.all([
     supabase
       .from("facilities")
@@ -41,7 +45,7 @@ export default async function FacilitiesPage({
       .from("facility_bookings")
       .select("id, facility_id, status, starts_at, ends_at, guest_count, fee_amount, facilities(name)")
       .eq("profile_id", session.userId)
-      .gte("ends_at", new Date(Date.now() - 7 * 86400_000).toISOString())
+      .gte("ends_at", bookingsSince)
       .order("starts_at", { ascending: true })
       .limit(20),
   ]);

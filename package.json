@@ -20,6 +20,7 @@
     "zod": "^4.1.14"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.19.4",
     "@types/react": "^19.2.8",

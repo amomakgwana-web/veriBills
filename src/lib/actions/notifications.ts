@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getEmailProvider, getSmsProvider } from "@/lib/integrations";
 import { normaliseMsisdn } from "@/lib/integrations/mock";
 import { formatMoney } from "@/lib/domain/money";
+import { escapeHtml } from "@/lib/html";
 
 /**
  * Transactional notifications.
@@ -72,14 +73,6 @@ export async function renderBrandedEmail(orgId: string, title: string, bodyHtml:
     </div>
     ${footer}
   </div>`;
-}
-
-export function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 /**

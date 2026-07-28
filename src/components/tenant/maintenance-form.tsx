@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { useFormStatus } from "react-dom";
 
 import { logMaintenance, type ActionState } from "@/lib/actions/tenant";
@@ -27,9 +28,9 @@ export function MaintenanceForm({ unitId }: { unitId: string }) {
     return (
       <div className="py-6 text-center">
         <p className="text-sm font-medium text-emerald-700 dark:text-emerald-400">{state.message}</p>
-        <a href="/tenant/maintenance" className={`${buttonClass("secondary")} mt-4`}>
+        <Link href="/tenant/maintenance" className={`${buttonClass("secondary")} mt-4`}>
           Back to requests
-        </a>
+        </Link>
       </div>
     );
   }
