@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatMoney } from "@/lib/domain/money";
 import { PayForm } from "@/components/tenant/pay-form";
 import { AcceptPlanButton } from "@/components/tenant/accept-plan";
+import { RequestPlanForm } from "@/components/tenant/request-plan";
 import {
   Badge,
   Card,
@@ -72,7 +73,7 @@ export default async function BillingPage({
         "id, reference, status, arrears_amount, instalment_amount, instalment_count, first_due_date, amount_paid, payment_plan_instalments(sequence, due_date, amount, status)",
       )
       .eq("account_id", unit.accountId ?? "")
-      .in("status", ["proposed", "awaiting_acceptance", "active"])
+      .in("status", ["requested", "proposed", "awaiting_acceptance", "active"])
       .maybeSingle(),
     supabase
       .from("debicheck_mandates")
@@ -134,7 +135,7 @@ export default async function BillingPage({
             </Card>
           )}
 
-          {plan.data && (
+          {plan.data ? (
             <Card className="mt-5" title="Payment arrangement">
               <div className="mb-3 flex items-center justify-between">
                 <StatusBadge status={plan.data.status} />
@@ -147,12 +148,29 @@ export default async function BillingPage({
                 <Row label="Paid so far">{formatMoney(plan.data.amount_paid)}</Row>
               </dl>
 
+              {plan.data.status === "requested" && (
+                <p className="bg-brand-50 text-brand-700 mt-4 rounded-lg px-3 py-2 text-xs">
+                  Sent to your estate for review. You will be able to accept it here once
+                  they decide.
+                </p>
+              )}
+
               {(plan.data.status === "proposed" || plan.data.status === "awaiting_acceptance") && (
                 <div className="mt-4">
                   <AcceptPlanButton planId={plan.data.id} />
                 </div>
               )}
             </Card>
+          ) : (
+            balance > 0 && (
+              <Card
+                className="mt-5"
+                title="Request a payment plan"
+                description="Spread what you owe across a few months instead of paying it all at once."
+              >
+                <RequestPlanForm accountId={unit.accountId ?? ""} balance={balance} />
+              </Card>
+            )
           )}
         </div>
 

@@ -271,6 +271,23 @@ export async function decideApproval(
     await admin.rpc("settle_payment", { p_payment: approval.subject_id });
   }
 
+  // A tenant-requested payment plan either moves on to "awaiting_acceptance"
+  // (the same state an estate-proposed plan starts in, so it reuses the
+  // tenant's existing accept flow) or is cancelled outright.
+  if (
+    approval?.type === "payment_plan" &&
+    approval.subject_table === "payment_plans" &&
+    (approval.status === "approved" || approval.status === "rejected")
+  ) {
+    await admin
+      .from("payment_plans")
+      .update({ status: approval.status === "approved" ? "awaiting_acceptance" : "cancelled" })
+      .eq("id", approval.subject_id)
+      .eq("status", "requested");
+    revalidatePath("/tenant/billing");
+    revalidatePath("/estate/billing");
+  }
+
   revalidatePath("/estate/approvals");
   return { status: "success", message: `Recorded your ${decision === "approved" ? "approval" : "rejection"}.` };
 }
