@@ -154,7 +154,7 @@ export default async function EstateDashboard({
         description="Portfolio performance this month"
       />
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile
           label="Outstanding"
           value={formatMoney(totalOwed)}
@@ -180,7 +180,7 @@ export default async function EstateDashboard({
         />
       </div>
 
-      <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile label="Active DebiChecks" value={activeMandates} href={`/estate/collections?org=${orgId}`} />
         <StatTile label="Active payment plans" value={activePlans} href={`/estate/tenants?org=${orgId}`} />
         <StatTile
@@ -196,7 +196,7 @@ export default async function EstateDashboard({
         />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <Card title="Debtor ageing" className="lg:col-span-1">
           <MiniBar
             segments={[
@@ -259,7 +259,7 @@ export default async function EstateDashboard({
         </Card>
       </div>
 
-      <div className="mt-5 grid gap-5 lg:grid-cols-2">
+      <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
         <Card
           title="Pending approvals"
           action={
@@ -345,7 +345,7 @@ export default async function EstateDashboard({
       </div>
 
       <Card className="mt-5" title="Communications this month">
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
             <p className="text-xs tracking-wide text-slate-500 uppercase">
               Messages sent

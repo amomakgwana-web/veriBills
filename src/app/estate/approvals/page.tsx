@@ -52,13 +52,13 @@ export default async function ApprovalsPage({
         description="Large payments, banking changes and other items needing sign-off."
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-3">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatTile label="Pending" value={pending.length} tone={pending.length ? "warning" : "success"} />
         <StatTile label="Value held" value={formatMoney(pendingValue)} />
         <StatTile label="Resolved" value={resolved.length} />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
           <h2 className="text-sm font-semibold text-slate-900">
             Awaiting decision

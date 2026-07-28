@@ -54,7 +54,7 @@ export default async function EstateMaintenancePage({
         description="Requests logged by tenants and picked up by the estate team."
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-4">
         <StatTile label="Open" value={open.length} />
         <StatTile label="Emergencies" value={emergencies.length} tone={emergencies.length ? "danger" : "success"} />
         <StatTile label="Not yet actioned" value={unassigned.length} tone={unassigned.length ? "warning" : "success"} />
@@ -137,7 +137,7 @@ export default async function EstateMaintenancePage({
         )}
       </Card>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <Card title="Contractors" className="lg:col-span-1">
           {contractors.data && contractors.data.length > 0 ? (
             <ul className="space-y-3 text-sm">

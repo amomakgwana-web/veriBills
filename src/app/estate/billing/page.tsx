@@ -58,7 +58,7 @@ export default async function EstateBillingPage({
     <>
       <PageHeader title="Billing" description="Run the monthly cycle and track what is owed." />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-3">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatTile label="Open invoices" value={invoices.data?.length ?? 0} />
         <StatTile label="Outstanding" value={formatMoney(outstanding)} tone="danger" />
         <StatTile label="Overdue" value={overdue.length} tone={overdue.length ? "danger" : "success"} />
@@ -92,7 +92,7 @@ export default async function EstateBillingPage({
         </div>
       )}
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <Card
           title="Run a billing cycle"
           description="Generates invoices from leases, recurring charges and metered consumption."

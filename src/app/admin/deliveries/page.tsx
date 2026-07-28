@@ -72,7 +72,7 @@ export default async function DeliveriesPage({
         description="Every message the platform has sent, with engagement and payment attribution."
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <StatTile label="Total messages" value={rows.length} />
         <StatTile label="Sent" value={sent} />
         <StatTile

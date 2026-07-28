@@ -26,7 +26,7 @@ export default async function BrandingPage() {
         description="Letterhead, colours and typography applied to each estate's statements and email."
       />
 
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {(brands ?? []).map((brand) => {
           const org = brand.organisations as { name: string; vat_number: string | null } | null;
 

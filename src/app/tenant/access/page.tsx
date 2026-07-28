@@ -52,7 +52,7 @@ export default async function AccessPage({
         description={`Unit ${unit.unitNumber} · ${unit.propertyName}`}
       />
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="lg:col-span-1">
           <Card title="Create a visitor code">
             <AccessCodeForm unitId={unit.unitId} />

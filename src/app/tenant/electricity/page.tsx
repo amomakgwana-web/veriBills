@@ -61,7 +61,7 @@ export default async function ElectricityPage({
         description={`Unit ${unit.unitNumber} · ${unit.propertyName}`}
       />
 
-      <div className="mb-6 grid gap-3 sm:grid-cols-3">
+      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatTile label="Purchased (last 20)" value={`${formatNumber(totals.units, 1)} kWh`} />
         <StatTile label="Spent" value={formatMoney(totals.spend)} />
         <StatTile
@@ -78,7 +78,7 @@ export default async function ElectricityPage({
         />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="lg:col-span-1">
           <Card title="Buy electricity">
             {prepaidMeters.length > 0 ? (

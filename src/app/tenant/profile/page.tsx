@@ -43,7 +43,7 @@ export default async function ProfilePage() {
     <>
       <PageHeader title="My profile" description="Your details, cards and notification settings." />
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <Card title="Personal details">
             <ProfileForm profile={profile.data} email={session.email} />

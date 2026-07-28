@@ -61,7 +61,7 @@ export default async function UsagePage({
         description="Consumption anomalies flagged against each unit's own baseline."
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-4">
         <StatTile label="Open flags" value={open.length} tone={open.length ? "warning" : "success"} />
         <StatTile label="Critical" value={critical.length} tone={critical.length ? "danger" : "success"} />
         <StatTile label="Meters baselined" value={baselines.data?.length ?? 0} />
@@ -125,7 +125,7 @@ export default async function UsagePage({
           )}
         </Card>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           <Card title="Detection rules">
             {rules.data && rules.data.length > 0 ? (
               <TableWrap>

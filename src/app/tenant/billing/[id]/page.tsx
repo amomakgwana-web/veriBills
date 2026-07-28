@@ -63,7 +63,7 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
         }
       />
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <Card title="Charges">
             <TableWrap>

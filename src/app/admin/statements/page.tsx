@@ -75,7 +75,7 @@ export default async function StatementsPage({
         description="Platform-wide ledger, split by billing channel."
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-3">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatTile label="Total billed" value={formatMoney(totalDebit)} />
         <StatTile label="Total received" value={formatMoney(totalCredit)} tone="success" />
         <StatTile

@@ -30,7 +30,7 @@ export default async function EstateAnnouncementsPage({
     <>
       <PageHeader title="Announcements" description="Notices published to tenant portals." />
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <Card title="Publish a notice">
           <AnnouncementForm orgId={orgId} properties={properties.data ?? []} />
         </Card>

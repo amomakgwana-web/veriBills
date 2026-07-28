@@ -48,7 +48,7 @@ export default async function ApplicationsPage({
         description="Prospective tenants applying for units, offices and retail space."
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-3">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatTile label="Total" value={rows.length} />
         <StatTile label="Awaiting review" value={pending.length} tone={pending.length ? "warning" : "success"} />
         <StatTile
