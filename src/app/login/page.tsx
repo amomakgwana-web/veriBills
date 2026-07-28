@@ -3,6 +3,8 @@ import Link from "next/link";
 
 import { createClient } from "@/lib/supabase/server";
 import { getSession } from "@/lib/auth/session";
+import { WaveBackground } from "@/components/brand/wave-background";
+import { LogoMark } from "@/components/brand/logo-mark";
 import { buttonClass, inputClass, labelClass } from "@/components/ui";
 
 export const metadata = { title: "Sign in" };
@@ -39,16 +41,14 @@ export default async function LoginPage({
   const params = await searchParams;
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-12">
-      <div className="w-full max-w-sm">
+    <main className="relative flex min-h-screen items-center justify-center px-4 py-12">
+      <WaveBackground />
+
+      <div className="animate-in w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="bg-brand-700 mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl text-lg font-bold text-white">
-            vB
-          </div>
-          <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-50">
-            Sign in to veriBills
-          </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          <LogoMark size="md" className="mx-auto mb-4 shadow-lg" />
+          <h1 className="text-xl font-semibold text-white">Sign in to veriBills</h1>
+          <p className="text-brand-100/80 mt-1 text-sm">
             Tenant, estate and platform administration
           </p>
         </div>
@@ -56,7 +56,7 @@ export default async function LoginPage({
         {params.error && (
           <div
             role="alert"
-            className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300"
+            className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
           >
             {params.error}
           </div>
@@ -64,7 +64,7 @@ export default async function LoginPage({
 
         <form
           action={signIn}
-          className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+          className="space-y-4 rounded-xl bg-white p-6 shadow-2xl ring-1 ring-black/5"
         >
           <input type="hidden" name="next" value={params.next ?? ""} />
 
@@ -104,9 +104,9 @@ export default async function LoginPage({
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-brand-100/80 mt-4 text-center text-sm">
           Applying for a unit?{" "}
-          <Link href="/signup" className="text-brand-700 dark:text-brand-400 font-medium">
+          <Link href="/signup" className="font-medium text-white hover:underline">
             Create an account
           </Link>
         </p>

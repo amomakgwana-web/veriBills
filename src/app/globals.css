@@ -1,17 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #f0fdfa;
-  --color-brand-100: #ccfbf1;
-  --color-brand-200: #99f6e4;
-  --color-brand-300: #5eead4;
-  --color-brand-400: #2dd4bf;
-  --color-brand-500: #14b8a6;
-  --color-brand-600: #0d9488;
-  --color-brand-700: #0f766e;
-  --color-brand-800: #115e59;
-  --color-brand-900: #134e4a;
-  --color-brand-950: #042f2e;
+  /* Anchored on the veriBills logo mark (#1800ad), scaled to a full palette. */
+  --color-brand-50: #f2f0fe;
+  --color-brand-100: #e5e2fe;
+  --color-brand-200: #c7befe;
+  --color-brand-300: #9686fe;
+  --color-brand-400: #6047ff;
+  --color-brand-500: #2605ff;
+  --color-brand-600: #1d00d6;
+  --color-brand-700: #1800ad;
+  --color-brand-800: #12008a;
+  --color-brand-900: #0e006b;
+  --color-brand-950: #090042;
 
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -64,4 +65,38 @@ body {
 
 .animate-in {
   animation: vb-fade-in 0.18s ease-out;
+}
+
+/*
+ * Wave background, used behind the auth pages.
+ * Each .wave-layer is a tile drawn twice side by side (200% width) and
+ * scrolled exactly one tile-width (-50% of its own width = -100% of the
+ * viewport), so the loop point is invisible regardless of viewport size.
+ */
+@keyframes vb-wave-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.wave-layer {
+  position: absolute;
+  left: 0;
+  width: 200%;
+  animation-name: vb-wave-scroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.wave-layer-reverse {
+  animation-direction: reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-layer {
+    animation: none;
+  }
 }
