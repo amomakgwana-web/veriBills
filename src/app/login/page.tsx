@@ -3,9 +3,11 @@ import Link from "next/link";
 
 import { createClient } from "@/lib/supabase/server";
 import { getSession } from "@/lib/auth/session";
+import { authErrorMessage } from "@/lib/auth/error-message";
 import { WaveBackground } from "@/components/brand/wave-background";
 import { LogoMark } from "@/components/brand/logo-mark";
-import { buttonClass, inputClass, labelClass } from "@/components/ui";
+import { authInputClass, authLabelClass } from "@/components/brand/auth-form";
+import { buttonClass } from "@/components/ui";
 
 export const metadata = { title: "Sign in" };
 
@@ -20,14 +22,31 @@ async function signIn(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent("Enter your email and password")}`);
   }
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-  if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    if (error) {
+      redirect(`/login?error=${encodeURIComponent(authErrorMessage(error, "signIn"))}`);
+    }
+  } catch (error) {
+    // A NEXT_REDIRECT throw from the line above passes straight through;
+    // only a real failure (network, malformed response) lands here.
+    if (isRedirectError(error)) throw error;
+    redirect(`/login?error=${encodeURIComponent(authErrorMessage(error, "signIn"))}`);
   }
 
   redirect(next && next.startsWith("/") ? next : "/");
+}
+
+function isRedirectError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    typeof (error as { digest: unknown }).digest === "string" &&
+    (error as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+  );
 }
 
 export default async function LoginPage({
@@ -69,7 +88,7 @@ export default async function LoginPage({
           <input type="hidden" name="next" value={params.next ?? ""} />
 
           <div>
-            <label className={labelClass} htmlFor="email">
+            <label className={authLabelClass} htmlFor="email">
               Email address
             </label>
             <input
@@ -79,13 +98,13 @@ export default async function LoginPage({
               required
               autoComplete="email"
               autoFocus
-              className={inputClass}
+              className={authInputClass}
               placeholder="you@example.co.za"
             />
           </div>
 
           <div>
-            <label className={labelClass} htmlFor="password">
+            <label className={authLabelClass} htmlFor="password">
               Password
             </label>
             <input
@@ -94,7 +113,7 @@ export default async function LoginPage({
               type="password"
               required
               autoComplete="current-password"
-              className={inputClass}
+              className={authInputClass}
               placeholder="••••••••"
             />
           </div>

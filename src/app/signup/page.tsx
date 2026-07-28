@@ -2,9 +2,11 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { createClient } from "@/lib/supabase/server";
+import { authErrorMessage } from "@/lib/auth/error-message";
 import { WaveBackground } from "@/components/brand/wave-background";
 import { LogoMark } from "@/components/brand/logo-mark";
-import { buttonClass, inputClass, labelClass } from "@/components/ui";
+import { authInputClass, authLabelClass } from "@/components/brand/auth-form";
+import { buttonClass } from "@/components/ui";
 
 export const metadata = { title: "Create an account" };
 
@@ -20,18 +22,33 @@ async function signUp(formData: FormData) {
     redirect(`/signup?error=${encodeURIComponent("Password must be at least 8 characters")}`);
   }
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: { data: { full_name: fullName, phone } },
-  });
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: fullName, phone } },
+    });
 
-  if (error) {
-    redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+    if (error) {
+      redirect(`/signup?error=${encodeURIComponent(authErrorMessage(error, "signUp"))}`);
+    }
+  } catch (error) {
+    if (isRedirectError(error)) throw error;
+    redirect(`/signup?error=${encodeURIComponent(authErrorMessage(error, "signUp"))}`);
   }
 
   redirect("/");
+}
+
+function isRedirectError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    typeof (error as { digest: unknown }).digest === "string" &&
+    (error as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+  );
 }
 
 export default async function SignupPage({
@@ -68,34 +85,34 @@ export default async function SignupPage({
           className="space-y-4 rounded-xl bg-white p-6 shadow-2xl ring-1 ring-black/5"
         >
           <div>
-            <label className={labelClass} htmlFor="full_name">
+            <label className={authLabelClass} htmlFor="full_name">
               Full name
             </label>
-            <input id="full_name" name="full_name" required className={inputClass} />
+            <input id="full_name" name="full_name" required className={authInputClass} />
           </div>
 
           <div>
-            <label className={labelClass} htmlFor="phone">
+            <label className={authLabelClass} htmlFor="phone">
               Mobile number
             </label>
             <input
               id="phone"
               name="phone"
               type="tel"
-              className={inputClass}
+              className={authInputClass}
               placeholder="082 123 4567"
             />
           </div>
 
           <div>
-            <label className={labelClass} htmlFor="email">
+            <label className={authLabelClass} htmlFor="email">
               Email address
             </label>
-            <input id="email" name="email" type="email" required className={inputClass} />
+            <input id="email" name="email" type="email" required className={authInputClass} />
           </div>
 
           <div>
-            <label className={labelClass} htmlFor="password">
+            <label className={authLabelClass} htmlFor="password">
               Password
             </label>
             <input
@@ -104,7 +121,7 @@ export default async function SignupPage({
               type="password"
               required
               minLength={8}
-              className={inputClass}
+              className={authInputClass}
             />
           </div>
 
