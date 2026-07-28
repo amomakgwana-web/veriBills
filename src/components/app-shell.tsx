@@ -42,12 +42,16 @@ export function AppShell({
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
+        <div className="from-brand-600 via-brand-500 to-brand-700 h-1 bg-gradient-to-r" />
+
         <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3">
           <Link href={portalHref} className="flex shrink-0 items-center gap-2">
             <LogoMark size="sm" />
-            <span className="hidden text-sm font-semibold text-slate-900 sm:block dark:text-slate-100">
+            <span className="text-brand-700 dark:text-brand-300 hidden text-sm font-semibold sm:block">
               veriBills
-              <span className="ml-1.5 font-normal text-slate-400">{portalName}</span>
+              <span className="text-brand-400 dark:text-brand-500 ml-1.5 font-normal">
+                {portalName}
+              </span>
             </span>
           </Link>
 
@@ -58,7 +62,7 @@ export function AppShell({
               <Link
                 key={p.href}
                 href={p.href}
-                className="hidden rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 md:block dark:text-slate-300 dark:hover:bg-slate-800"
+                className="hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-brand-950/40 dark:hover:text-brand-300 hidden rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-600 md:block dark:text-slate-300"
               >
                 {p.label}
               </Link>
@@ -72,7 +76,7 @@ export function AppShell({
               {initials || "?"}
             </Link>
 
-            <SignOutButton className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800" />
+            <SignOutButton className="hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-brand-950/40 dark:hover:text-brand-300 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300" />
           </div>
         </div>
 
