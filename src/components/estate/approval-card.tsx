@@ -97,7 +97,7 @@ export function ApprovalCard({
             </p>
           )}
           {state.status === "success" && (
-            <p role="status" className="text-xs text-emerald-600 dark:text-emerald-400">
+            <p role="status" className="text-xs text-brand-600 dark:text-brand-400">
               {state.message}
             </p>
           )}

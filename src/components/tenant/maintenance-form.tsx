@@ -27,7 +27,7 @@ export function MaintenanceForm({ unitId }: { unitId: string }) {
   if (state.status === "success") {
     return (
       <div className="py-6 text-center">
-        <p className="text-sm font-medium text-emerald-700 dark:text-emerald-400">{state.message}</p>
+        <p className="text-sm font-medium text-brand-700 dark:text-brand-400">{state.message}</p>
         <Link href="/tenant/maintenance" className={`${buttonClass("secondary")} mt-4`}>
           Back to requests
         </Link>

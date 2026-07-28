@@ -91,15 +91,15 @@ export default async function TenantOverview({
       />
 
       {plan && (
-        <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900 dark:bg-amber-950/40">
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900 dark:bg-red-950/40">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-medium text-amber-900 dark:text-amber-200">
+              <p className="text-sm font-medium text-red-900 dark:text-red-200">
                 {plan.status === "active"
                   ? "You are on a payment arrangement"
                   : "A payment arrangement has been proposed for you"}
               </p>
-              <p className="mt-0.5 text-sm text-amber-800 dark:text-amber-300">
+              <p className="mt-0.5 text-sm text-red-800 dark:text-red-300">
                 {formatMoney(plan.instalment_amount)} × {plan.instalment_count} towards{" "}
                 {formatMoney(plan.arrears_amount)} of arrears.
               </p>

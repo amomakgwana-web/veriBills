@@ -144,7 +144,7 @@ export default async function TenantsPage({
                     className={
                       Number(account.balance) > 0
                         ? "font-medium text-red-600 dark:text-red-400"
-                        : "text-emerald-600 dark:text-emerald-400"
+                        : "text-brand-600 dark:text-brand-400"
                     }
                   >
                     {formatMoney(account.balance)}

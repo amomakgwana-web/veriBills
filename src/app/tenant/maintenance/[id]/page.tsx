@@ -104,11 +104,11 @@ export default async function MaintenanceDetail({
             )}
 
             {request.resolution_notes && (
-              <div className="mt-4 rounded-lg bg-emerald-50 px-3 py-2.5 dark:bg-emerald-950/40">
-                <p className="text-xs font-medium tracking-wide text-emerald-800 uppercase dark:text-emerald-300">
+              <div className="mt-4 rounded-lg bg-brand-50 px-3 py-2.5 dark:bg-brand-950/40">
+                <p className="text-xs font-medium tracking-wide text-brand-800 uppercase dark:text-brand-300">
                   Resolution
                 </p>
-                <p className="mt-1 text-sm text-emerald-900 dark:text-emerald-200">
+                <p className="mt-1 text-sm text-brand-900 dark:text-brand-200">
                   {request.resolution_notes}
                 </p>
               </div>

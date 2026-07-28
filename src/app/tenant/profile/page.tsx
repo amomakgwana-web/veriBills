@@ -67,7 +67,7 @@ export default async function ProfilePage() {
                       className={
                         Number(unit.balance ?? 0) > 0
                           ? "font-medium text-red-600 dark:text-red-400"
-                          : "font-medium text-emerald-600 dark:text-emerald-400"
+                          : "font-medium text-brand-600 dark:text-brand-400"
                       }
                     >
                       {formatMoney(unit.balance ?? 0)}

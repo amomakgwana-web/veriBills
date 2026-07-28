@@ -21,8 +21,8 @@ export function NavLink({ href, children }: { href: string; children: ReactNode 
       className={cx(
         "-mb-px inline-flex items-center border-b-2 px-3 py-2.5 text-sm font-medium transition",
         active
-          ? "border-brand-600 text-brand-700 dark:border-brand-400 dark:text-brand-300"
-          : "border-transparent text-slate-500 hover:border-brand-200 hover:text-brand-600 dark:text-slate-400 dark:hover:border-brand-800 dark:hover:text-brand-400",
+          ? "border-white text-white"
+          : "text-brand-200 border-transparent hover:border-white/40 hover:text-white",
       )}
     >
       {children}

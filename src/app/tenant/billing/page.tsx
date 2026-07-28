@@ -253,7 +253,7 @@ export default async function BillingPage({
                         align="right"
                         className={
                           entry.direction === "credit"
-                            ? "font-medium text-emerald-600 dark:text-emerald-400"
+                            ? "font-medium text-brand-600 dark:text-brand-400"
                             : "text-slate-700 dark:text-slate-300"
                         }
                       >
