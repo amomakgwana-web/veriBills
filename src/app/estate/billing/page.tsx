@@ -2,6 +2,7 @@ import { resolveOrg } from "@/lib/estate-context";
 import { createClient } from "@/lib/supabase/server";
 import { formatMoney } from "@/lib/domain/money";
 import { BillingRunForm } from "@/components/estate/billing-run-form";
+import { ApprovalCard } from "@/components/estate/approval-card";
 import {
   Card,
   EmptyState,
@@ -20,11 +21,11 @@ export default async function EstateBillingPage({
 }: {
   searchParams: Promise<{ org?: string }>;
 }) {
-  const { membership } = await resolveOrg(searchParams);
+  const { session, membership } = await resolveOrg(searchParams);
   const orgId = membership.orgId;
   const supabase = await createClient();
 
-  const [runs, properties, invoices] = await Promise.all([
+  const [runs, properties, invoices, planRequests] = await Promise.all([
     supabase
       .from("billing_runs")
       .select("id, period_start, period_end, due_date, status, invoices_created, total_billed, completed_at, error_message")
@@ -39,6 +40,15 @@ export default async function EstateBillingPage({
       .in("status", ["issued", "part_paid", "overdue"])
       .order("due_date", { ascending: true })
       .limit(40),
+    supabase
+      .from("approvals")
+      .select(
+        "id, type, title, description, amount, required_approvals, approvals_received, created_at, approval_decisions(decided_by)",
+      )
+      .eq("org_id", orgId)
+      .eq("type", "payment_plan")
+      .eq("status", "pending")
+      .order("created_at", { ascending: false }),
   ]);
 
   const outstanding = (invoices.data ?? []).reduce((sum, i) => sum + Number(i.amount_due), 0);
@@ -53,6 +63,34 @@ export default async function EstateBillingPage({
         <StatTile label="Outstanding" value={formatMoney(outstanding)} tone="danger" />
         <StatTile label="Overdue" value={overdue.length} tone={overdue.length ? "danger" : "success"} />
       </div>
+
+      {planRequests.data && planRequests.data.length > 0 && (
+        <div className="mb-5 space-y-3">
+          <h2 className="text-sm font-semibold text-slate-900">
+            Payment plan requests ({planRequests.data.length})
+          </h2>
+          {planRequests.data.map((approval) => {
+            const decisions = (approval.approval_decisions ?? []) as { decided_by: string }[];
+            const alreadyDecided = decisions.some((d) => d.decided_by === session.userId);
+            return (
+              <ApprovalCard
+                key={approval.id}
+                approval={{
+                  id: approval.id,
+                  type: approval.type,
+                  title: approval.title,
+                  description: approval.description,
+                  amount: approval.amount,
+                  requiredApprovals: approval.required_approvals,
+                  approvalsReceived: approval.approvals_received,
+                  createdAt: approval.created_at,
+                }}
+                alreadyDecided={alreadyDecided}
+              />
+            );
+          })}
+        </div>
+      )}
 
       <div className="grid gap-5 lg:grid-cols-3">
         <Card

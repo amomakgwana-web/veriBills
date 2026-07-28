@@ -5879,6 +5879,7 @@ export type Database = {
         | "completed"
         | "defaulted"
         | "cancelled"
+        | "requested"
       payment_status:
         | "initiated"
         | "requires_3ds"
@@ -6232,6 +6233,7 @@ export const Constants = {
         "completed",
         "defaulted",
         "cancelled",
+        "requested",
       ],
       payment_status: [
         "initiated",

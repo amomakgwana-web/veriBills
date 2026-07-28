@@ -6,12 +6,130 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireSession } from "@/lib/auth/session";
+import { splitInstalments, fromCents, toCents, formatMoney } from "@/lib/domain/money";
 import type { Database } from "@/lib/supabase/types";
 
 export type ActionState = { status: "idle" | "success" | "error"; message?: string };
 
 type Priority = Database["public"]["Enums"]["maintenance_priority"];
 type AccessCodeType = Database["public"]["Enums"]["access_code_type"];
+
+/**
+ * Tenant asks for a payment plan on their own account. Unlike
+ * `proposePaymentPlan` (estate-initiated), this doesn't activate anything —
+ * it lands as a `requested` plan plus a `payment_plan` approval, so an
+ * owner/admin/manager has to vet it first. See `decideApproval` for what
+ * happens once they do.
+ */
+export async function requestPaymentPlan(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const accountId = String(formData.get("account_id") ?? "");
+  const instalments = Number(formData.get("instalment_count") ?? 0);
+  const depositAmount = Number(formData.get("deposit_amount") ?? 0);
+  const note = String(formData.get("note") ?? "").trim();
+
+  if (!Number.isFinite(instalments) || instalments < 1 || instalments > 36) {
+    return { status: "error", message: "Choose between 1 and 36 instalments." };
+  }
+  if (!Number.isFinite(depositAmount) || depositAmount < 0) {
+    return { status: "error", message: "Deposit cannot be negative." };
+  }
+
+  const session = await requireSession();
+  const unit = session.units.find((u) => u.accountId === accountId);
+  if (!unit) return { status: "error", message: "That account is not on your profile." };
+
+  const admin = createAdminClient();
+
+  const { data: existing } = await admin
+    .from("payment_plans")
+    .select("id")
+    .eq("account_id", accountId)
+    .in("status", ["requested", "proposed", "awaiting_acceptance", "active"])
+    .maybeSingle();
+
+  if (existing) {
+    return { status: "error", message: "You already have a plan request or arrangement in progress." };
+  }
+
+  const { data: account } = await admin
+    .from("tenant_accounts")
+    .select("id, balance")
+    .eq("id", accountId)
+    .maybeSingle();
+
+  if (!account) return { status: "error", message: "Account not found." };
+
+  const arrearsCents = toCents(account.balance) - Math.round(depositAmount * 100);
+  if (arrearsCents <= 0) {
+    return { status: "error", message: "Your balance does not need a payment plan." };
+  }
+
+  const amounts = splitInstalments(arrearsCents, instalments);
+
+  const { data: reference } = await admin.rpc("next_sequence_number", {
+    p_org: unit.orgId,
+    p_kind: "payment_plan",
+    p_prefix: "PP",
+  });
+
+  const firstDue = new Date();
+  firstDue.setMonth(firstDue.getMonth() + 1, 1);
+
+  const { data: plan, error } = await admin
+    .from("payment_plans")
+    .insert({
+      org_id: unit.orgId,
+      account_id: accountId,
+      reference: reference ?? `PP-${randomUUID().slice(0, 8).toUpperCase()}`,
+      status: "requested",
+      arrears_amount: fromCents(arrearsCents),
+      deposit_amount: depositAmount,
+      instalment_amount: fromCents(amounts[0]),
+      instalment_count: instalments,
+      first_due_date: firstDue.toISOString().slice(0, 10),
+      notes: note || null,
+    })
+    .select("id, reference")
+    .single();
+
+  if (error || !plan) {
+    return { status: "error", message: error?.message ?? "Could not submit your request." };
+  }
+
+  await admin.from("payment_plan_instalments").insert(
+    amounts.map((amountCents, index) => {
+      const due = new Date(firstDue);
+      due.setMonth(due.getMonth() + index);
+      return {
+        plan_id: plan.id,
+        sequence: index + 1,
+        due_date: due.toISOString().slice(0, 10),
+        amount: fromCents(amountCents),
+      };
+    }),
+  );
+
+  await admin.from("approvals").insert({
+    org_id: unit.orgId,
+    type: "payment_plan",
+    title: `Payment plan request — ${plan.reference}`,
+    description:
+      `${session.fullName ?? session.email} (${unit.unitNumber}) asked for ${instalments} ` +
+      `instalments of ${formatMoney(fromCents(amounts[0]))}` +
+      (depositAmount > 0 ? ` after a ${formatMoney(depositAmount)} deposit.` : ".") +
+      (note ? ` Note: ${note}` : ""),
+    subject_table: "payment_plans",
+    subject_id: plan.id,
+    amount: fromCents(arrearsCents),
+    requested_by: session.userId,
+  });
+
+  revalidatePath("/tenant/billing");
+  return { status: "success", message: `Request ${plan.reference} sent for approval.` };
+}
 
 /** Accept a payment arrangement the estate proposed. */
 export async function acceptPaymentPlan(planId: string): Promise<ActionState> {
