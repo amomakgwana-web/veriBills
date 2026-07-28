@@ -22,20 +22,13 @@ export function Card({
 }) {
   return (
     <section
-      className={cx(
-        "rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900",
-        className,
-      )}
+      className={cx("border-brand-200 rounded-xl border bg-white shadow-sm", className)}
     >
       {(title || action) && (
-        <header className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+        <header className="border-brand-100 flex flex-wrap items-start justify-between gap-3 border-b px-5 py-4">
           <div className="min-w-0">
-            {title && (
-              <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</h2>
-            )}
-            {description && (
-              <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{description}</p>
-            )}
+            {title && <h2 className="text-sm font-semibold text-slate-900">{title}</h2>}
+            {description && <p className="mt-0.5 text-sm text-slate-500">{description}</p>}
           </div>
           {action}
         </header>
@@ -156,15 +149,11 @@ export function StatTile({
   href?: string;
 }) {
   const body = (
-    <div className="hover:border-brand-300 dark:hover:border-brand-700 rounded-xl border border-slate-200 bg-white p-4 transition dark:border-slate-800 dark:bg-slate-900">
-      <p className="text-xs font-medium tracking-wide text-slate-500 uppercase dark:text-slate-400">
-        {label}
-      </p>
-      <p className="tabular mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-50">
-        {value}
-      </p>
+    <div className="border-brand-200 hover:border-brand-400 rounded-xl border bg-white p-4 transition">
+      <p className="text-xs font-medium tracking-wide text-slate-500 uppercase">{label}</p>
+      <p className="tabular mt-2 text-2xl font-semibold text-slate-900">{value}</p>
       {hint && (
-        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-xs text-slate-500">
           {tone !== "neutral" ? <Badge tone={tone}>{hint}</Badge> : hint}
         </p>
       )}
@@ -190,13 +179,9 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-lg border border-dashed border-slate-300 px-6 py-10 text-center dark:border-slate-700">
-      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{title}</p>
-      {description && (
-        <p className="mx-auto mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">
-          {description}
-        </p>
-      )}
+    <div className="border-brand-200 rounded-lg border border-dashed px-6 py-10 text-center">
+      <p className="text-sm font-medium text-slate-700">{title}</p>
+      {description && <p className="mx-auto mt-1 max-w-md text-sm text-slate-500">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
   );
@@ -221,7 +206,7 @@ export function Th({
   return (
     <th
       className={cx(
-        "border-b border-slate-200 px-3 py-2 text-xs font-medium tracking-wide text-slate-500 uppercase dark:border-slate-800 dark:text-slate-400",
+        "border-b border-slate-200 px-3 py-2 text-xs font-medium tracking-wide text-slate-500 uppercase",
         align === "right" && "text-right",
         align === "center" && "text-center",
         align === "left" && "text-left",
@@ -247,7 +232,7 @@ export function Td({
     <td
       colSpan={colSpan}
       className={cx(
-        "border-b border-slate-100 px-3 py-2.5 text-slate-700 dark:border-slate-800/60 dark:text-slate-300",
+        "border-b border-slate-100 px-3 py-2.5 text-slate-700",
         align === "right" && "tabular text-right",
         align === "center" && "text-center",
         className,
@@ -371,11 +356,11 @@ export function MiniBar({
 }) {
   const total = segments.reduce((sum, s) => sum + s.value, 0);
   if (total <= 0) {
-    return <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-800" />;
+    return <div className="h-2 rounded-full bg-slate-100" />;
   }
 
   return (
-    <div className="flex h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+    <div className="flex h-2 overflow-hidden rounded-full bg-slate-100">
       {segments
         .filter((s) => s.value > 0)
         .map((s) => (
