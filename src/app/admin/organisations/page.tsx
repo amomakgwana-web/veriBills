@@ -62,7 +62,7 @@ export default async function OrganisationsPage() {
                 </Badge>
               }
             >
-              <div className="grid gap-5 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
                 <div>
                   <h3 className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase">
                     Details

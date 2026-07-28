@@ -66,7 +66,7 @@ export default async function HealthPage() {
         action={<HealthCheckButton />}
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-4">
         <StatTile
           label="Components"
           value={components.length}
@@ -90,7 +90,7 @@ export default async function HealthPage() {
         />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <Card title="Component status">
           {components.length > 0 ? (
             <TableWrap>

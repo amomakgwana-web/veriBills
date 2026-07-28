@@ -56,7 +56,7 @@ export default async function MetersPage() {
         action={<PollMetersButton />}
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-4">
         <StatTile label="Meters" value={rows.length} />
         <StatTile
           label="Active"

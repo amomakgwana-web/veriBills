@@ -65,14 +65,14 @@ export default async function CollectionsPage({
         description="Authenticated mandates and collection runs"
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-4">
         <StatTile label="Active mandates" value={active.length} tone="success" />
         <StatTile label="Awaiting authentication" value={pending.length} tone={pending.length ? "warning" : "neutral"} />
         <StatTile label="Monthly value" value={formatMoney(monthlyValue)} />
         <StatTile label="Failed collections" value={failed.length} tone={failed.length ? "danger" : "success"} />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <Card title="Run a collection" description="Submits every authenticated mandate for the date.">
           <CollectionRunForm orgId={orgId} mandateCount={active.length} />
         </Card>

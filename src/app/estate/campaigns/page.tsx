@@ -59,14 +59,14 @@ export default async function CampaignsPage({
         description="Bill presentment, arrears reminders and estate notices."
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-4">
         <StatTile label="Campaigns" value={campaigns.data?.length ?? 0} />
         <StatTile label="Messages sent" value={totals.sent} />
         <StatTile label="Opened" value={totals.opened} tone="success" />
         <StatTile label="Failed" value={totals.failed} tone={totals.failed ? "danger" : "success"} />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <Card
           title="New campaign"
           description="Filter the audience, then save a draft or send it now."

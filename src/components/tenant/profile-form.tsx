@@ -29,7 +29,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
 
   return (
     <form action={action} className="space-y-5">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Full name">
           <input name="full_name" defaultValue={profile?.full_name ?? ""} className={inputClass} />
         </Field>
@@ -46,7 +46,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
         <input value={email} disabled className={`${inputClass} opacity-60`} />
       </Field>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Mobile number">
           <input
             name="phone"
@@ -66,7 +66,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
         </Field>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Field label="Identification type">
           <select name="id_type" defaultValue={profile?.id_type ?? "sa_id"} className={inputClass}>
             <option value="sa_id">SA ID</option>
@@ -101,7 +101,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
         <p className="mb-3 text-xs font-medium tracking-wide text-slate-500 uppercase">
           Emergency contact
         </p>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Name">
             <input
               name="emergency_contact_name"

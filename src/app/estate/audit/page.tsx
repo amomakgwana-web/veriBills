@@ -61,7 +61,7 @@ export default async function AuditPage({
         description="Every change to leases, payments, mandates, banking and staff access."
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-3">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatTile label="Entries" value={rows.length} />
         <StatTile label="Tables tracked" value={tables.length} />
         <StatTile

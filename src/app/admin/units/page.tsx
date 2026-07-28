@@ -53,7 +53,7 @@ export default async function UnitConfigPage() {
         description="Rent, levies and the tariffs that drive each unit's bill."
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-4">
         <StatTile label="Units" value={rows.length} />
         <StatTile
           label="Occupied"

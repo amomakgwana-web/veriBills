@@ -90,7 +90,7 @@ export default async function TenantsPage({
         action={<RefreshScoresButton orgId={orgId} />}
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-4">
         <StatTile label="Tenants" value={rows.length} />
         <StatTile label="In arrears" value={arrearsCount} tone={arrearsCount ? "danger" : "success"} />
         <StatTile label="Total owed" value={formatMoney(totalOwed)} />
