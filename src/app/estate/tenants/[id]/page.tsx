@@ -123,7 +123,7 @@ export default async function TenantDetail({
         action={
           <Link
             href={`/estate/tenants?org=${membership.orgId}`}
-            className="text-brand-700 dark:text-brand-400 text-sm font-medium"
+            className="text-brand-700 text-sm font-medium"
           >
             Back to tenants
           </Link>
@@ -370,7 +370,7 @@ export default async function TenantDetail({
                         align="right"
                         className={
                           entry.direction === "credit"
-                            ? "font-medium text-brand-600 dark:text-brand-400"
+                            ? "font-medium text-brand-600"
                             : ""
                         }
                       >
@@ -431,8 +431,8 @@ export default async function TenantDetail({
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <dt className="text-slate-500 dark:text-slate-400">{label}</dt>
-      <dd className="tabular text-right font-medium text-slate-800 dark:text-slate-200">
+      <dt className="text-slate-500">{label}</dt>
+      <dd className="tabular text-right font-medium text-slate-800">
         {children}
       </dd>
     </div>

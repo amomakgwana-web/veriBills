@@ -62,7 +62,7 @@ export default async function FacilitiesPage({
       />
 
       {inArrears && (
-        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
           Your account is in arrears. Facilities that require good standing are locked until the
           balance is settled.
         </div>
@@ -78,10 +78,10 @@ export default async function FacilitiesPage({
             <Card key={facility.id} className="flex flex-col">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                  <h3 className="text-sm font-semibold text-slate-900">
                     {facility.name}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-slate-500">
                     {humanise(facility.kind)} · {facility.opens_at.slice(0, 5)}–
                     {facility.closes_at.slice(0, 5)}
                   </p>
@@ -98,12 +98,12 @@ export default async function FacilitiesPage({
               </div>
 
               {facility.description && (
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                <p className="mt-2 text-sm text-slate-600">
                   {facility.description}
                 </p>
               )}
 
-              <dl className="mt-3 space-y-1 text-xs text-slate-500 dark:text-slate-400">
+              <dl className="mt-3 space-y-1 text-xs text-slate-500">
                 {facility.capacity && (
                   <div className="flex justify-between">
                     <dt>Capacity</dt>
@@ -123,12 +123,12 @@ export default async function FacilitiesPage({
                   </div>
                 )}
                 {facility.requires_induction && !grant?.induction_completed_at && (
-                  <div className="text-red-700 dark:text-red-400">Induction required</div>
+                  <div className="text-red-700">Induction required</div>
                 )}
               </dl>
 
               {facility.requires_booking && (
-                <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+                <div className="mt-4 border-t border-slate-100 pt-4">
                   <BookFacilityForm
                     facilityId={facility.id}
                     unitId={unit.unitId}

@@ -109,7 +109,7 @@ export default async function MetersPage() {
                     </Td>
                     <Td>
                       {meter.last_reading_at ? (
-                        <span className={isStale ? "text-red-600 dark:text-red-400" : ""}>
+                        <span className={isStale ? "text-red-600" : ""}>
                           {new Date(meter.last_reading_at).toLocaleDateString("en-ZA", {
                             day: "numeric",
                             month: "short",

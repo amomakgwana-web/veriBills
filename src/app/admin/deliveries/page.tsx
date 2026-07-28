@@ -131,7 +131,7 @@ export default async function DeliveriesPage({
                 <tr key={delivery.id}>
                   <Td>
                     {(delivery.profiles as { full_name: string | null } | null)?.full_name ?? "—"}
-                    <span className="block text-xs text-slate-500 dark:text-slate-400">
+                    <span className="block text-xs text-slate-500">
                       {delivery.to_address}
                     </span>
                   </Td>
@@ -195,7 +195,7 @@ function Chip({ label, active, href }: { label: string; active: boolean; href: s
       className={
         active
           ? "bg-brand-700 rounded-full px-2.5 py-1 text-xs font-medium text-white"
-          : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
+          : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200"
       }
     >
       {label}

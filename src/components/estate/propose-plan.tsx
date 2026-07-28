@@ -58,21 +58,21 @@ export function ProposePlanForm({
       </Field>
 
       {preview > 0 && (
-        <div className="bg-brand-50 dark:bg-brand-950/40 rounded-lg px-3 py-2 text-sm">
-          <span className="text-slate-600 dark:text-slate-400">Monthly instalment</span>
-          <span className="text-brand-800 dark:text-brand-200 float-right font-semibold">
+        <div className="bg-brand-50 rounded-lg px-3 py-2 text-sm">
+          <span className="text-slate-600">Monthly instalment</span>
+          <span className="text-brand-800 float-right font-semibold">
             {formatMoney(preview)}
           </span>
         </div>
       )}
 
       {state.status === "error" && (
-        <p role="alert" className="text-xs text-red-600 dark:text-red-400">
+        <p role="alert" className="text-xs text-red-600">
           {state.message}
         </p>
       )}
       {state.status === "success" && (
-        <p role="status" className="text-xs text-brand-600 dark:text-brand-400">
+        <p role="status" className="text-xs text-brand-600">
           {state.message}
         </p>
       )}

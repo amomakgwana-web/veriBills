@@ -77,12 +77,12 @@ export function AnnouncementForm({
       </div>
 
       {state.status === "error" && (
-        <p role="alert" className="text-xs text-red-600 dark:text-red-400">
+        <p role="alert" className="text-xs text-red-600">
           {state.message}
         </p>
       )}
       {state.status === "success" && (
-        <p role="status" className="text-xs text-brand-600 dark:text-brand-400">
+        <p role="status" className="text-xs text-brand-600">
           {state.message}
         </p>
       )}
@@ -94,7 +94,7 @@ export function AnnouncementForm({
 
 function Checkbox({ name, label }: { name: string; label: string }) {
   return (
-    <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+    <label className="flex items-center gap-2 text-sm text-slate-700">
       <input
         type="checkbox"
         name={name}

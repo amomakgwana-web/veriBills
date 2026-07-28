@@ -220,7 +220,7 @@ export default async function EstateDashboard({
           title="High consumption flags"
           className="lg:col-span-2"
           action={
-            <Link href={`/estate/usage?org=${orgId}`} className="text-brand-700 dark:text-brand-400 text-xs font-medium">
+            <Link href={`/estate/usage?org=${orgId}`} className="text-brand-700 text-xs font-medium">
               View all
             </Link>
           }
@@ -263,7 +263,7 @@ export default async function EstateDashboard({
         <Card
           title="Pending approvals"
           action={
-            <Link href={`/estate/approvals?org=${orgId}`} className="text-brand-700 dark:text-brand-400 text-xs font-medium">
+            <Link href={`/estate/approvals?org=${orgId}`} className="text-brand-700 text-xs font-medium">
               Review
             </Link>
           }
@@ -273,10 +273,10 @@ export default async function EstateDashboard({
               {approvals.data.map((approval) => (
                 <li key={approval.id} className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-200">
+                    <p className="truncate text-sm font-medium text-slate-800">
                       {approval.title}
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <p className="text-xs text-slate-500">
                       {humanise(approval.type)}
                     </p>
                   </div>
@@ -296,7 +296,7 @@ export default async function EstateDashboard({
         <Card
           title="Open maintenance"
           action={
-            <Link href={`/estate/maintenance?org=${orgId}`} className="text-brand-700 dark:text-brand-400 text-xs font-medium">
+            <Link href={`/estate/maintenance?org=${orgId}`} className="text-brand-700 text-xs font-medium">
               View all
             </Link>
           }
@@ -347,24 +347,24 @@ export default async function EstateDashboard({
       <Card className="mt-5" title="Communications this month">
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
-            <p className="text-xs tracking-wide text-slate-500 uppercase dark:text-slate-400">
+            <p className="text-xs tracking-wide text-slate-500 uppercase">
               Messages sent
             </p>
             <p className="tabular mt-1 text-2xl font-semibold">{deliveries.data?.length ?? 0}</p>
           </div>
           <div>
-            <p className="text-xs tracking-wide text-slate-500 uppercase dark:text-slate-400">
+            <p className="text-xs tracking-wide text-slate-500 uppercase">
               Delivered
             </p>
-            <p className="tabular mt-1 text-2xl font-semibold text-brand-600 dark:text-brand-400">
+            <p className="tabular mt-1 text-2xl font-semibold text-brand-600">
               {delivered}
             </p>
           </div>
           <div>
-            <p className="text-xs tracking-wide text-slate-500 uppercase dark:text-slate-400">
+            <p className="text-xs tracking-wide text-slate-500 uppercase">
               Failed
             </p>
-            <p className="tabular mt-1 text-2xl font-semibold text-red-600 dark:text-red-400">
+            <p className="tabular mt-1 text-2xl font-semibold text-red-600">
               {deliveryFailed}
             </p>
           </div>
@@ -377,11 +377,11 @@ export default async function EstateDashboard({
 function AgeRow({ label, value, dot }: { label: string; value: number; dot: string }) {
   return (
     <div className="flex items-center justify-between">
-      <dt className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+      <dt className="flex items-center gap-2 text-slate-600">
         <span className={`h-2 w-2 rounded-full ${dot}`} />
         {label}
       </dt>
-      <dd className="tabular font-medium text-slate-800 dark:text-slate-200">
+      <dd className="tabular font-medium text-slate-800">
         {formatMoney(value)}
       </dd>
     </div>

@@ -25,7 +25,7 @@ export function PollMetersButton() {
         {pending ? "Polling…" : "Poll meters now"}
       </button>
       {message && (
-        <p role="status" className="mt-1 max-w-sm text-xs text-slate-500 dark:text-slate-400">
+        <p role="status" className="mt-1 max-w-sm text-xs text-slate-500">
           {message}
         </p>
       )}

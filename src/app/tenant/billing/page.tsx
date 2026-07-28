@@ -128,7 +128,7 @@ export default async function BillingPage({
                 <Row label="Bank">{mandate.data.bank_name}</Row>
                 <Row label="Account">{mandate.data.account_number_masked}</Row>
               </dl>
-              <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-3 text-xs text-slate-500">
                 Authenticated mandates are collected automatically each month.
               </p>
             </Card>
@@ -176,7 +176,7 @@ export default async function BillingPage({
                       <Td>
                         <Link
                           href={`/tenant/billing/${invoice.id}`}
-                          className="text-brand-700 dark:text-brand-400 font-medium"
+                          className="text-brand-700 font-medium"
                         >
                           {invoice.invoice_number}
                         </Link>
@@ -253,8 +253,8 @@ export default async function BillingPage({
                         align="right"
                         className={
                           entry.direction === "credit"
-                            ? "font-medium text-brand-600 dark:text-brand-400"
-                            : "text-slate-700 dark:text-slate-300"
+                            ? "font-medium text-brand-600"
+                            : "text-slate-700"
                         }
                       >
                         {entry.direction === "credit" ? "−" : "+"}
@@ -281,8 +281,8 @@ export default async function BillingPage({
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <dt className="text-slate-500 dark:text-slate-400">{label}</dt>
-      <dd className="tabular font-medium text-slate-800 dark:text-slate-200">{children}</dd>
+      <dt className="text-slate-500">{label}</dt>
+      <dd className="tabular font-medium text-slate-800">{children}</dd>
     </div>
   );
 }
@@ -308,7 +308,7 @@ function ChannelChip({
       className={
         active
           ? "bg-brand-700 rounded-full px-2.5 py-1 text-xs font-medium text-white"
-          : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+          : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200"
       }
     >
       {label}

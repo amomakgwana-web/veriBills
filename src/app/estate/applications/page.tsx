@@ -95,18 +95,18 @@ export default async function ApplicationsPage({
                   <tr key={application.id}>
                     <Td>{application.reference}</Td>
                     <Td>
-                      <span className="font-medium text-slate-800 dark:text-slate-200">
+                      <span className="font-medium text-slate-800">
                         {application.is_company
                           ? (application.company_name ?? "Company")
                           : (applicant?.full_name ?? "—")}
                       </span>
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">
+                      <span className="block text-xs text-slate-500">
                         {applicant?.email}
                       </span>
                     </Td>
                     <Td>
                       {humanise(application.requested_type)}
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">
+                      <span className="block text-xs text-slate-500">
                         {property?.name ?? "Any property"}
                         {unit ? ` · ${unit.unit_number}` : ""}
                       </span>
@@ -119,8 +119,8 @@ export default async function ApplicationsPage({
                         <span
                           className={
                             ratio > 33
-                              ? "font-medium text-red-600 dark:text-red-400"
-                              : "text-brand-600 dark:text-brand-400"
+                              ? "font-medium text-red-600"
+                              : "text-brand-600"
                           }
                         >
                           {formatNumber(ratio, 0)}%

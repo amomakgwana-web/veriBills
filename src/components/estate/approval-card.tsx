@@ -46,11 +46,11 @@ export function ApprovalCard({
               })}
             </span>
           </div>
-          <h3 className="mt-1.5 text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <h3 className="mt-1.5 text-sm font-semibold text-slate-900">
             {approval.title}
           </h3>
           {approval.description && (
-            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+            <p className="mt-0.5 text-sm text-slate-500">
               {approval.description}
             </p>
           )}
@@ -58,22 +58,22 @@ export function ApprovalCard({
 
         <div className="text-right">
           {approval.amount && (
-            <p className="tabular text-lg font-semibold text-slate-900 dark:text-slate-50">
+            <p className="tabular text-lg font-semibold text-slate-900">
               {formatMoney(approval.amount)}
             </p>
           )}
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-slate-500">
             {approval.approvalsReceived} of {approval.requiredApprovals} approvals
           </p>
         </div>
       </div>
 
       {alreadyDecided ? (
-        <p className="mt-4 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+        <p className="mt-4 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">
           You have already recorded a decision on this item.
         </p>
       ) : (
-        <form action={action} className="mt-4 space-y-3 border-t border-slate-100 pt-4 dark:border-slate-800">
+        <form action={action} className="mt-4 space-y-3 border-t border-slate-100 pt-4">
           <input type="hidden" name="approval_id" value={approval.id} />
 
           <input
@@ -92,12 +92,12 @@ export function ApprovalCard({
           )}
 
           {state.status === "error" && (
-            <p role="alert" className="text-xs text-red-600 dark:text-red-400">
+            <p role="alert" className="text-xs text-red-600">
               {state.message}
             </p>
           )}
           {state.status === "success" && (
-            <p role="status" className="text-xs text-brand-600 dark:text-brand-400">
+            <p role="status" className="text-xs text-brand-600">
               {state.message}
             </p>
           )}

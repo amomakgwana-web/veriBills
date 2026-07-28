@@ -102,10 +102,10 @@ export default async function CollectionsPage({
                         })}
                       </Td>
                       <Td align="right">{run.mandate_count}</Td>
-                      <Td align="right" className="text-brand-600 dark:text-brand-400">
+                      <Td align="right" className="text-brand-600">
                         {run.successful_count}
                       </Td>
-                      <Td align="right" className="text-red-600 dark:text-red-400">
+                      <Td align="right" className="text-red-600">
                         {run.failed_count}
                       </Td>
                       <Td align="right">{formatMoney(run.total_amount)}</Td>

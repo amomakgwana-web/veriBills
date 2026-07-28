@@ -96,9 +96,9 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
         />
       </Field>
 
-      <fieldset className="border-t border-slate-100 pt-4 dark:border-slate-800">
+      <fieldset className="border-t border-slate-100 pt-4">
         <legend className="sr-only">Emergency contact</legend>
-        <p className="mb-3 text-xs font-medium tracking-wide text-slate-500 uppercase dark:text-slate-400">
+        <p className="mb-3 text-xs font-medium tracking-wide text-slate-500 uppercase">
           Emergency contact
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -120,9 +120,9 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
         </div>
       </fieldset>
 
-      <fieldset className="border-t border-slate-100 pt-4 dark:border-slate-800">
+      <fieldset className="border-t border-slate-100 pt-4">
         <legend className="sr-only">Notifications</legend>
-        <p className="mb-3 text-xs font-medium tracking-wide text-slate-500 uppercase dark:text-slate-400">
+        <p className="mb-3 text-xs font-medium tracking-wide text-slate-500 uppercase">
           Notifications
         </p>
         <div className="space-y-2.5">
@@ -147,7 +147,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
       {state.status === "error" && (
         <p
           role="alert"
-          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300"
+          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
         >
           {state.message}
         </p>
@@ -155,7 +155,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
       {state.status === "success" && (
         <p
           role="status"
-          className="rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm text-brand-700 dark:border-brand-900 dark:bg-brand-950 dark:text-brand-300"
+          className="rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm text-brand-700"
         >
           {state.message}
         </p>
@@ -176,7 +176,7 @@ function Toggle({
   defaultChecked: boolean;
 }) {
   return (
-    <label className="flex items-center gap-2.5 text-sm text-slate-700 dark:text-slate-300">
+    <label className="flex items-center gap-2.5 text-sm text-slate-700">
       <input
         type="checkbox"
         name={name}

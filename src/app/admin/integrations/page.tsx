@@ -87,7 +87,7 @@ export default async function IntegrationsPage() {
             ))}
           </tbody>
         </TableWrap>
-        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+        <p className="mt-3 text-xs text-slate-500">
           Credentials are read from the environment and never stored in the database. Integration
           records below hold only non-secret configuration plus a reference to the secret store.
         </p>
@@ -110,7 +110,7 @@ export default async function IntegrationsPage() {
                   <tr key={integration.id}>
                     <Td>
                       {humanise(integration.kind)}
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">
+                      <span className="block text-xs text-slate-500">
                         {KIND_LABELS[integration.kind] ?? ""}
                       </span>
                     </Td>

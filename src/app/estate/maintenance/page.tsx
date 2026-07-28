@@ -89,15 +89,15 @@ export default async function EstateMaintenancePage({
                     <Td>{request.reference}</Td>
                     <Td>
                       {unit?.unit_number ?? "—"}
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">
+                      <span className="block text-xs text-slate-500">
                         {unit?.properties?.name}
                       </span>
                     </Td>
                     <Td className="max-w-[16rem]">
-                      <span className="font-medium text-slate-800 dark:text-slate-200">
+                      <span className="font-medium text-slate-800">
                         {request.title}
                       </span>
-                      <span className="block truncate text-xs text-slate-500 dark:text-slate-400">
+                      <span className="block truncate text-xs text-slate-500">
                         {humanise(request.category)} · {request.description}
                       </span>
                     </Td>
@@ -144,10 +144,10 @@ export default async function EstateMaintenancePage({
               {contractors.data.map((contractor) => (
                 <li key={contractor.id} className="flex items-center justify-between gap-2">
                   <div>
-                    <p className="font-medium text-slate-800 dark:text-slate-200">
+                    <p className="font-medium text-slate-800">
                       {contractor.name}
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <p className="text-xs text-slate-500">
                       {contractor.trade} · {contractor.phone}
                     </p>
                   </div>

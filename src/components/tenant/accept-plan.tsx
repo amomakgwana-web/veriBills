@@ -25,11 +25,11 @@ export function AcceptPlanButton({ planId }: { planId: string }) {
         {pending ? "Accepting…" : "Accept arrangement"}
       </button>
       {message && (
-        <p role="status" className="mt-2 text-xs text-slate-600 dark:text-slate-400">
+        <p role="status" className="mt-2 text-xs text-slate-600">
           {message}
         </p>
       )}
-      <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+      <p className="mt-2 text-xs text-slate-500">
         Accepting confirms you will pay the instalments alongside your normal monthly charges.
       </p>
     </div>

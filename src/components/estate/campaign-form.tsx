@@ -73,7 +73,7 @@ export function CampaignForm({
         </select>
       </Field>
 
-      <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+      <label className="flex items-center gap-2 text-sm text-slate-700">
         <input
           type="checkbox"
           name="in_arrears"
@@ -102,7 +102,7 @@ export function CampaignForm({
         />
       </Field>
 
-      <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+      <label className="flex items-center gap-2 text-sm text-slate-700">
         <input
           type="checkbox"
           name="send_now"
@@ -114,7 +114,7 @@ export function CampaignForm({
       {state.status === "error" && (
         <p
           role="alert"
-          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300"
+          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
         >
           {state.message}
         </p>
@@ -122,7 +122,7 @@ export function CampaignForm({
       {state.status === "success" && (
         <p
           role="status"
-          className="rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm text-brand-700 dark:border-brand-900 dark:bg-brand-950 dark:text-brand-300"
+          className="rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm text-brand-700"
         >
           {state.message}
         </p>

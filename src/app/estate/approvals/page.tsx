@@ -60,7 +60,7 @@ export default async function ApprovalsPage({
 
       <div className="grid gap-5 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
-          <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <h2 className="text-sm font-semibold text-slate-900">
             Awaiting decision
           </h2>
 
@@ -104,11 +104,11 @@ export default async function ApprovalsPage({
             {policies.data && policies.data.length > 0 ? (
               <ul className="space-y-3 text-sm">
                 {policies.data.map((policy) => (
-                  <li key={policy.type} className="border-b border-slate-100 pb-2 last:border-0 dark:border-slate-800">
-                    <p className="font-medium text-slate-800 dark:text-slate-200">
+                  <li key={policy.type} className="border-b border-slate-100 pb-2 last:border-0">
+                    <p className="font-medium text-slate-800">
                       {humanise(policy.type)}
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <p className="text-xs text-slate-500">
                       {policy.amount_threshold
                         ? `Over ${formatMoney(policy.amount_threshold)}`
                         : "Always required"}{" "}

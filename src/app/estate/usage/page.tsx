@@ -95,7 +95,7 @@ export default async function UsagePage({
                     <tr key={alert.id}>
                       <Td>
                         {unit?.unit_number ?? "—"}
-                        <span className="block text-xs text-slate-500 dark:text-slate-400">
+                        <span className="block text-xs text-slate-500">
                           {unit?.properties?.name}
                         </span>
                       </Td>
@@ -103,7 +103,7 @@ export default async function UsagePage({
                       <Td className="max-w-sm">{alert.detail}</Td>
                       <Td align="right">{formatNumber(alert.observed_value, 1)}</Td>
                       <Td align="right">{formatNumber(alert.expected_value, 1)}</Td>
-                      <Td align="right" className="font-medium text-red-600 dark:text-red-400">
+                      <Td align="right" className="font-medium text-red-600">
                         +{formatNumber(alert.deviation_percent, 0)}%
                       </Td>
                       <Td>

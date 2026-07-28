@@ -5,8 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { authErrorMessage } from "@/lib/auth/error-message";
 import { WaveBackground } from "@/components/brand/wave-background";
 import { LogoMark } from "@/components/brand/logo-mark";
-import { authInputClass, authLabelClass } from "@/components/brand/auth-form";
-import { buttonClass } from "@/components/ui";
+import { buttonClass, inputClass, labelClass } from "@/components/ui";
 
 export const metadata = { title: "Create an account" };
 
@@ -85,34 +84,34 @@ export default async function SignupPage({
           className="space-y-4 rounded-xl bg-white p-6 shadow-2xl ring-1 ring-black/5"
         >
           <div>
-            <label className={authLabelClass} htmlFor="full_name">
+            <label className={labelClass} htmlFor="full_name">
               Full name
             </label>
-            <input id="full_name" name="full_name" required className={authInputClass} />
+            <input id="full_name" name="full_name" required className={inputClass} />
           </div>
 
           <div>
-            <label className={authLabelClass} htmlFor="phone">
+            <label className={labelClass} htmlFor="phone">
               Mobile number
             </label>
             <input
               id="phone"
               name="phone"
               type="tel"
-              className={authInputClass}
+              className={inputClass}
               placeholder="082 123 4567"
             />
           </div>
 
           <div>
-            <label className={authLabelClass} htmlFor="email">
+            <label className={labelClass} htmlFor="email">
               Email address
             </label>
-            <input id="email" name="email" type="email" required className={authInputClass} />
+            <input id="email" name="email" type="email" required className={inputClass} />
           </div>
 
           <div>
-            <label className={authLabelClass} htmlFor="password">
+            <label className={labelClass} htmlFor="password">
               Password
             </label>
             <input
@@ -121,7 +120,7 @@ export default async function SignupPage({
               type="password"
               required
               minLength={8}
-              className={authInputClass}
+              className={inputClass}
             />
           </div>
 

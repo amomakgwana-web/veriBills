@@ -104,8 +104,8 @@ export default async function DocumentsPage({
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs tracking-wide text-slate-500 uppercase dark:text-slate-400">{label}</dt>
-      <dd className="mt-0.5 text-sm font-medium text-slate-800 dark:text-slate-200">{value}</dd>
+      <dt className="text-xs tracking-wide text-slate-500 uppercase">{label}</dt>
+      <dd className="mt-0.5 text-sm font-medium text-slate-800">{value}</dd>
     </div>
   );
 }
@@ -144,9 +144,9 @@ function DocumentSection({
             {documents.map((doc) => (
               <tr key={doc.id}>
                 <Td>
-                  <span className="font-medium text-slate-800 dark:text-slate-200">{doc.title}</span>
+                  <span className="font-medium text-slate-800">{doc.title}</span>
                   {doc.description && (
-                    <span className="block text-xs text-slate-500 dark:text-slate-400">
+                    <span className="block text-xs text-slate-500">
                       {doc.description}
                     </span>
                   )}

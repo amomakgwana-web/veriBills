@@ -25,7 +25,7 @@ export function RefreshScoresButton({ orgId }: { orgId: string }) {
         {pending ? "Recalculating…" : "Recalculate scores"}
       </button>
       {message && (
-        <p role="status" className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+        <p role="status" className="mt-1 text-xs text-slate-500">
           {message}
         </p>
       )}

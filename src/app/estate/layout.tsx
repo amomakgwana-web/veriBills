@@ -38,7 +38,7 @@ export default async function EstateLayout({ children }: { children: React.React
         session.memberships.length > 1 ? (
           <OrgSwitcher memberships={session.memberships} />
         ) : (
-          <span className="hidden text-xs font-medium text-slate-500 md:block dark:text-slate-400">
+          <span className="hidden text-xs font-medium text-slate-500 md:block">
             {membership.orgName}
           </span>
         )

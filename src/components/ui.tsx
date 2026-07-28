@@ -39,12 +39,12 @@ export function Card({
 }
 
 const TONES = {
-  neutral: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
-  brand: "bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300",
-  success: "bg-brand-700 text-white dark:bg-brand-600",
-  warning: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
-  danger: "bg-red-600 text-white dark:bg-red-700",
-  info: "bg-brand-50 text-brand-600 dark:bg-brand-950 dark:text-brand-400",
+  neutral: "bg-slate-100 text-slate-700",
+  brand: "bg-brand-50 text-brand-700",
+  success: "bg-brand-700 text-white",
+  warning: "bg-red-50 text-red-700",
+  danger: "bg-red-600 text-white",
+  info: "bg-brand-50 text-brand-600",
 } as const;
 
 export type Tone = keyof typeof TONES;
@@ -285,15 +285,15 @@ export function buttonClass(
   size: "sm" | "md" = "md",
 ) {
   const base =
-    "inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900";
+    "inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1";
 
   const sizes = { sm: "px-2.5 py-1.5 text-xs", md: "px-3.5 py-2 text-sm" };
 
   const variants = {
-    primary: "bg-brand-700 text-white hover:bg-brand-800 dark:bg-brand-600 dark:hover:bg-brand-500",
+    primary: "bg-brand-700 text-white hover:bg-brand-800",
     secondary:
-      "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800",
-    ghost: "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800",
+      "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50",
+    ghost: "text-slate-600 hover:bg-slate-100",
     danger: "bg-red-600 text-white hover:bg-red-700",
   };
 
@@ -301,10 +301,9 @@ export function buttonClass(
 }
 
 export const inputClass =
-  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100";
+  "border-brand-200 w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none";
 
-export const labelClass =
-  "block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5";
+export const labelClass = "mb-1.5 block text-xs font-medium text-slate-600";
 
 export function Field({
   label,
@@ -321,7 +320,7 @@ export function Field({
     <div className={className}>
       <label className={labelClass}>{label}</label>
       {children}
-      {hint && <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
     </div>
   );
 }
@@ -338,9 +337,9 @@ export function PageHeader({
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-50">{title}</h1>
+        <h1 className="text-xl font-semibold text-slate-900">{title}</h1>
         {description && (
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{description}</p>
+          <p className="mt-1 text-sm text-slate-500">{description}</p>
         )}
       </div>
       {action}

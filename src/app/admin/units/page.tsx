@@ -93,7 +93,7 @@ export default async function UnitConfigPage() {
                     <Td>{unit.unit_number}</Td>
                     <Td>
                       {property?.name}
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">
+                      <span className="block text-xs text-slate-500">
                         {property?.organisations?.name}
                       </span>
                     </Td>
@@ -129,14 +129,14 @@ export default async function UnitConfigPage() {
               return (
                 <div
                   key={tariff.id}
-                  className="rounded-lg border border-slate-200 p-4 dark:border-slate-800"
+                  className="rounded-lg border border-slate-200 p-4"
                 >
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                     <div>
-                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      <p className="text-sm font-semibold text-slate-900">
                         {tariff.name}
                       </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-xs text-slate-500">
                         {humanise(tariff.utility)} ·{" "}
                         {(tariff.organisations as { name: string } | null)?.name} · fixed{" "}
                         {formatMoney(tariff.fixed_charge)} · markup {tariff.markup_percent}% · VAT{" "}
