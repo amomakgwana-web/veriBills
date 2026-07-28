@@ -5,6 +5,7 @@ import { requireTenant } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { formatMoney, formatNumber } from "@/lib/domain/money";
 import {
+  buttonClass,
   Card,
   PageHeader,
   StatusBadge,
@@ -54,12 +55,14 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
         title={invoice.invoice_number}
         description={`${unit?.properties?.name ?? ""} · Unit ${unit?.unit_number ?? ""}`}
         action={
-          <Link
-            href="/tenant/billing"
-            className="text-brand-700 text-sm font-medium"
-          >
-            Back to billing
-          </Link>
+          <div className="flex items-center gap-3">
+            <a href={`/api/invoices/${invoice.id}/pdf`} className={buttonClass("secondary", "sm")}>
+              Download PDF
+            </a>
+            <Link href="/tenant/billing" className="text-brand-700 text-sm font-medium">
+              Back to billing
+            </Link>
+          </div>
         }
       />
 
