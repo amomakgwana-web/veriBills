@@ -67,7 +67,7 @@ export default async function MaintenanceDetail({
         action={
           <Link
             href="/tenant/maintenance"
-            className="text-brand-700 dark:text-brand-400 text-sm font-medium"
+            className="text-brand-700 text-sm font-medium"
           >
             Back to requests
           </Link>
@@ -93,22 +93,22 @@ export default async function MaintenanceDetail({
               <Badge>{humanise(request.category)}</Badge>
             </div>
 
-            <p className="text-sm whitespace-pre-wrap text-slate-600 dark:text-slate-400">
+            <p className="text-sm whitespace-pre-wrap text-slate-600">
               {request.description}
             </p>
 
             {request.location_detail && (
-              <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+              <p className="mt-3 text-sm text-slate-500">
                 <span className="font-medium">Location:</span> {request.location_detail}
               </p>
             )}
 
             {request.resolution_notes && (
-              <div className="mt-4 rounded-lg bg-brand-50 px-3 py-2.5 dark:bg-brand-950/40">
-                <p className="text-xs font-medium tracking-wide text-brand-800 uppercase dark:text-brand-300">
+              <div className="mt-4 rounded-lg bg-brand-50 px-3 py-2.5">
+                <p className="text-xs font-medium tracking-wide text-brand-800 uppercase">
                   Resolution
                 </p>
-                <p className="mt-1 text-sm text-brand-900 dark:text-brand-200">
+                <p className="mt-1 text-sm text-brand-900">
                   {request.resolution_notes}
                 </p>
               </div>
@@ -119,8 +119,8 @@ export default async function MaintenanceDetail({
             {comments.data && comments.data.length > 0 ? (
               <ul className="space-y-4">
                 {comments.data.map((comment) => (
-                  <li key={comment.id} className="border-l-2 border-slate-200 pl-3 dark:border-slate-700">
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <li key={comment.id} className="border-l-2 border-slate-200 pl-3">
+                    <p className="text-xs text-slate-500">
                       {(comment.profiles as { full_name: string | null } | null)?.full_name ??
                         "Estate team"}{" "}
                       ·{" "}
@@ -131,7 +131,7 @@ export default async function MaintenanceDetail({
                         minute: "2-digit",
                       })}
                     </p>
-                    <p className="mt-0.5 text-sm text-slate-700 dark:text-slate-300">
+                    <p className="mt-0.5 text-sm text-slate-700">
                       {comment.body}
                     </p>
                   </li>
@@ -157,7 +157,7 @@ export default async function MaintenanceDetail({
             </ol>
 
             {history.data && history.data.length > 0 && (
-              <ul className="mt-4 space-y-1.5 border-t border-slate-100 pt-3 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+              <ul className="mt-4 space-y-1.5 border-t border-slate-100 pt-3 text-xs text-slate-500">
                 {history.data.map((entry) => (
                   <li key={entry.id}>
                     {humanise(entry.from_status ?? "new")} → {humanise(entry.to_status)} ·{" "}
@@ -196,12 +196,12 @@ function TimelineRow({ label, at }: { label: string; at: string | null }) {
   return (
     <li className="flex items-center gap-2.5">
       <span
-        className={`h-2 w-2 shrink-0 rounded-full ${at ? "bg-brand-600" : "bg-slate-300 dark:bg-slate-700"}`}
+        className={`h-2 w-2 shrink-0 rounded-full ${at ? "bg-brand-600" : "bg-slate-300"}`}
       />
-      <span className={at ? "text-sm text-slate-800 dark:text-slate-200" : "text-sm text-slate-400"}>
+      <span className={at ? "text-sm text-slate-800" : "text-sm text-slate-400"}>
         {label}
       </span>
-      <span className="ml-auto text-xs text-slate-500 dark:text-slate-400">
+      <span className="ml-auto text-xs text-slate-500">
         {at
           ? new Date(at).toLocaleDateString("en-ZA", { day: "numeric", month: "short" })
           : "—"}
@@ -213,8 +213,8 @@ function TimelineRow({ label, at }: { label: string; at: string | null }) {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <dt className="text-slate-500 dark:text-slate-400">{label}</dt>
-      <dd className="text-right font-medium text-slate-800 dark:text-slate-200">{children}</dd>
+      <dt className="text-slate-500">{label}</dt>
+      <dd className="text-right font-medium text-slate-800">{children}</dd>
     </div>
   );
 }

@@ -76,8 +76,8 @@ export function AppShell({
           </div>
         </div>
 
-        <nav className="mx-auto max-w-7xl overflow-x-auto px-4">
-          <ul className="flex gap-1 pb-px whitespace-nowrap">
+        <nav className="mx-auto max-w-7xl overflow-x-auto px-4 pb-2">
+          <ul className="flex gap-1 whitespace-nowrap">
             {nav.map((item) => (
               <li key={item.href}>
                 <NavLink href={item.href}>

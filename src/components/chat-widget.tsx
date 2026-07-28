@@ -72,7 +72,7 @@ export function ChatWidget({ userName }: { userName: string }) {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={open ? "Close support chat" : "Open support chat"}
-        className="bg-brand-700 hover:bg-brand-800 dark:bg-brand-600 fixed right-5 bottom-5 z-40 flex h-13 w-13 items-center justify-center rounded-full p-3.5 text-white shadow-lg transition"
+        className="bg-brand-700 hover:bg-brand-800 fixed right-5 bottom-5 z-40 flex h-13 w-13 items-center justify-center rounded-full p-3.5 text-white shadow-lg transition"
       >
         {open ? (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">

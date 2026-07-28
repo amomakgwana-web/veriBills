@@ -35,7 +35,7 @@ export function MaintenanceStatusForm({
         name="status"
         defaultValue={current}
         aria-label="Update status"
-        className="focus:border-brand-500 rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+        className="focus:border-brand-500 rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 focus:outline-none"
       >
         {STATUSES.map((status) => (
           <option key={status} value={status}>

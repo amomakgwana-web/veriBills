@@ -31,18 +31,18 @@ export function CollectionRunForm({
         />
       </Field>
 
-      <p className="text-sm text-slate-600 dark:text-slate-400">
+      <p className="text-sm text-slate-600">
         {mandateCount} authenticated mandate{mandateCount === 1 ? "" : "s"} will be submitted.
         Successful collections post to the tenant ledger automatically.
       </p>
 
       {state.status === "error" && (
-        <p role="alert" className="text-xs text-red-600 dark:text-red-400">
+        <p role="alert" className="text-xs text-red-600">
           {state.message}
         </p>
       )}
       {state.status === "success" && (
-        <p role="status" className="text-xs text-brand-600 dark:text-brand-400">
+        <p role="status" className="text-xs text-brand-600">
           {state.message}
         </p>
       )}

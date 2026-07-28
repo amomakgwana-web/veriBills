@@ -22,7 +22,7 @@ export function OrgSwitcher({ memberships }: { memberships: Membership[] }) {
           params.set("org", event.target.value);
           router.push(`${pathname}?${params.toString()}`);
         }}
-        className="focus:border-brand-500 max-w-[14rem] rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+        className="focus:border-brand-500 max-w-[14rem] rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none"
       >
         {memberships.map((membership) => (
           <option key={membership.orgId} value={membership.orgId}>

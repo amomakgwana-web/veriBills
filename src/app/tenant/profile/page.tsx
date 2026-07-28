@@ -54,11 +54,11 @@ export default async function ProfilePage() {
           <Card title="Your units">
             <ul className="space-y-3">
               {session.units.map((unit) => (
-                <li key={unit.unitId} className="rounded-lg border border-slate-200 p-3 dark:border-slate-800">
-                  <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                <li key={unit.unitId} className="rounded-lg border border-slate-200 p-3">
+                  <p className="text-sm font-medium text-slate-800">
                     {unit.propertyName}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-slate-500">
                     Unit {unit.unitNumber} · {unit.accountNumber}
                   </p>
                   <p className="tabular mt-1 text-sm">
@@ -66,8 +66,8 @@ export default async function ProfilePage() {
                     <span
                       className={
                         Number(unit.balance ?? 0) > 0
-                          ? "font-medium text-red-600 dark:text-red-400"
-                          : "font-medium text-brand-600 dark:text-brand-400"
+                          ? "font-medium text-red-600"
+                          : "font-medium text-brand-600"
                       }
                     >
                       {formatMoney(unit.balance ?? 0)}
@@ -82,10 +82,10 @@ export default async function ProfilePage() {
             <Card title="Payment standing">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="tabular text-3xl font-semibold text-slate-900 dark:text-slate-50">
+                  <p className="tabular text-3xl font-semibold text-slate-900">
                     {score.data.score}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">out of 100</p>
+                  <p className="text-xs text-slate-500">out of 100</p>
                 </div>
                 <Badge
                   tone={
@@ -148,8 +148,8 @@ export default async function ProfilePage() {
 function ScoreRow({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex justify-between">
-      <dt className="text-slate-500 dark:text-slate-400">{label}</dt>
-      <dd className="tabular font-medium text-slate-800 dark:text-slate-200">{value}</dd>
+      <dt className="text-slate-500">{label}</dt>
+      <dd className="tabular font-medium text-slate-800">{value}</dd>
     </div>
   );
 }

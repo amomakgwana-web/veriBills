@@ -27,7 +27,7 @@ export function MaintenanceForm({ unitId }: { unitId: string }) {
   if (state.status === "success") {
     return (
       <div className="py-6 text-center">
-        <p className="text-sm font-medium text-brand-700 dark:text-brand-400">{state.message}</p>
+        <p className="text-sm font-medium text-brand-700">{state.message}</p>
         <Link href="/tenant/maintenance" className={`${buttonClass("secondary")} mt-4`}>
           Back to requests
         </Link>
@@ -88,7 +88,7 @@ export function MaintenanceForm({ unitId }: { unitId: string }) {
         />
       </Field>
 
-      <label className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300">
+      <label className="flex items-start gap-2.5 text-sm text-slate-700">
         <input
           type="checkbox"
           name="permission_to_enter"
@@ -96,7 +96,7 @@ export function MaintenanceForm({ unitId }: { unitId: string }) {
         />
         <span>
           I give permission for a contractor to enter the unit in my absence.
-          <span className="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">
+          <span className="mt-0.5 block text-xs text-slate-500">
             Without this, we will arrange a time with you first, which can take longer.
           </span>
         </span>
@@ -105,7 +105,7 @@ export function MaintenanceForm({ unitId }: { unitId: string }) {
       {state.status === "error" && (
         <p
           role="alert"
-          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300"
+          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
         >
           {state.message}
         </p>

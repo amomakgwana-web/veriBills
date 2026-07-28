@@ -115,12 +115,12 @@ export function MandateForm({
       </div>
 
       {state.status === "error" && (
-        <p role="alert" className="text-xs text-red-600 dark:text-red-400">
+        <p role="alert" className="text-xs text-red-600">
           {state.message}
         </p>
       )}
       {state.status === "success" && (
-        <p role="status" className="text-xs text-brand-600 dark:text-brand-400">
+        <p role="status" className="text-xs text-brand-600">
           {state.message}
         </p>
       )}

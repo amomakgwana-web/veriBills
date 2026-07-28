@@ -136,7 +136,7 @@ export default async function CampaignsPage({
                       <Td>
                         {(delivery.profiles as { full_name: string | null } | null)?.full_name ??
                           delivery.to_address}
-                        <span className="block text-xs text-slate-500 dark:text-slate-400">
+                        <span className="block text-xs text-slate-500">
                           {delivery.to_address}
                         </span>
                       </Td>

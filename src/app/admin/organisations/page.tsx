@@ -64,7 +64,7 @@ export default async function OrganisationsPage() {
             >
               <div className="grid gap-5 lg:grid-cols-3">
                 <div>
-                  <h3 className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase dark:text-slate-400">
+                  <h3 className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase">
                     Details
                   </h3>
                   <dl className="space-y-1.5 text-sm">
@@ -79,30 +79,30 @@ export default async function OrganisationsPage() {
                 </div>
 
                 <div>
-                  <h3 className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase dark:text-slate-400">
+                  <h3 className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase">
                     Properties ({orgProperties.length})
                   </h3>
                   {orgProperties.length > 0 ? (
                     <ul className="space-y-1.5 text-sm">
                       {orgProperties.map((property) => (
                         <li key={property.id} className="flex items-center justify-between gap-2">
-                          <span className="text-slate-700 dark:text-slate-300">{property.name}</span>
+                          <span className="text-slate-700">{property.name}</span>
                           <Badge>{humanise(property.type)}</Badge>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-sm text-slate-500 dark:text-slate-400">No properties</p>
+                    <p className="text-sm text-slate-500">No properties</p>
                   )}
 
-                  <h3 className="mt-4 mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase dark:text-slate-400">
+                  <h3 className="mt-4 mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase">
                     Banking
                   </h3>
                   {orgBanks.length > 0 ? (
                     <ul className="space-y-1.5 text-sm">
                       {orgBanks.map((bank) => (
                         <li key={bank.id} className="flex items-center justify-between gap-2">
-                          <span className="text-slate-700 dark:text-slate-300">
+                          <span className="text-slate-700">
                             {bank.bank_name} {bank.account_number_masked}
                           </span>
                           {bank.pending_approval_id ? (
@@ -116,14 +116,14 @@ export default async function OrganisationsPage() {
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                    <p className="text-sm text-slate-500">
                       No bank account configured
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <h3 className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase dark:text-slate-400">
+                  <h3 className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase">
                     Staff ({orgMembers.length})
                   </h3>
                   {orgMembers.length > 0 ? (
@@ -159,7 +159,7 @@ export default async function OrganisationsPage() {
                       </tbody>
                     </TableWrap>
                   ) : (
-                    <p className="text-sm text-slate-500 dark:text-slate-400">No staff</p>
+                    <p className="text-sm text-slate-500">No staff</p>
                   )}
                 </div>
               </div>
@@ -180,8 +180,8 @@ export default async function OrganisationsPage() {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <dt className="text-slate-500 dark:text-slate-400">{label}</dt>
-      <dd className="text-right font-medium text-slate-800 dark:text-slate-200">{children}</dd>
+      <dt className="text-slate-500">{label}</dt>
+      <dd className="text-right font-medium text-slate-800">{children}</dd>
     </div>
   );
 }

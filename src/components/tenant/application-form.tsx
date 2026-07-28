@@ -35,7 +35,7 @@ export function ApplicationForm({
   if (state.status === "success") {
     return (
       <div className="py-6 text-center">
-        <p className="text-sm font-medium text-brand-700 dark:text-brand-400">{state.message}</p>
+        <p className="text-sm font-medium text-brand-700">{state.message}</p>
         <a href="/apply" className={`${buttonClass("secondary")} mt-4`}>
           Apply for another
         </a>
@@ -123,7 +123,7 @@ export function ApplicationForm({
         </Field>
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+      <label className="flex items-center gap-2 text-sm text-slate-700">
         <input
           type="checkbox"
           name="is_company"
@@ -177,7 +177,7 @@ export function ApplicationForm({
         </>
       )}
 
-      <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+      <label className="flex items-center gap-2 text-sm text-slate-700">
         <input
           type="checkbox"
           name="has_pets"
@@ -197,7 +197,7 @@ export function ApplicationForm({
       {state.status === "error" && (
         <p
           role="alert"
-          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300"
+          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
         >
           {state.message}
         </p>

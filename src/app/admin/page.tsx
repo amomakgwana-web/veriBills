@@ -80,11 +80,11 @@ export default async function AdminOverview() {
       />
 
       {!hasServiceRole() && (
-        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900 dark:bg-red-950/40">
-          <p className="text-sm font-medium text-red-900 dark:text-red-200">
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4">
+          <p className="text-sm font-medium text-red-900">
             Service role key not configured
           </p>
-          <p className="mt-0.5 text-sm text-red-800 dark:text-red-300">
+          <p className="mt-0.5 text-sm text-red-800">
             Billing runs, payment settlement and prepaid token issue are disabled until{" "}
             <code>SUPABASE_SERVICE_ROLE_KEY</code> is set on the server.
           </p>
@@ -138,7 +138,7 @@ export default async function AdminOverview() {
               : "All providers configured."
           }
           action={
-            <Link href="/admin/integrations" className="text-brand-700 dark:text-brand-400 text-xs font-medium">
+            <Link href="/admin/integrations" className="text-brand-700 text-xs font-medium">
               Configure
             </Link>
           }
@@ -170,7 +170,7 @@ export default async function AdminOverview() {
         <Card
           title="Organisations"
           action={
-            <Link href="/admin/organisations" className="text-brand-700 dark:text-brand-400 text-xs font-medium">
+            <Link href="/admin/organisations" className="text-brand-700 text-xs font-medium">
               View all
             </Link>
           }

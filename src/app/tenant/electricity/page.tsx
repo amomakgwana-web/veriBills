@@ -133,7 +133,7 @@ export default async function ElectricityPage({
                       <Td align="right">{formatNumber(purchase.units_kwh, 2)}</Td>
                       <Td>
                         {purchase.token ? (
-                          <code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs tracking-wider dark:bg-slate-800">
+                          <code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs tracking-wider">
                             {purchase.token}
                           </code>
                         ) : (

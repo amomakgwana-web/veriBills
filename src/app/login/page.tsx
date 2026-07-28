@@ -6,8 +6,7 @@ import { getSession } from "@/lib/auth/session";
 import { authErrorMessage } from "@/lib/auth/error-message";
 import { WaveBackground } from "@/components/brand/wave-background";
 import { LogoMark } from "@/components/brand/logo-mark";
-import { authInputClass, authLabelClass } from "@/components/brand/auth-form";
-import { buttonClass } from "@/components/ui";
+import { buttonClass, inputClass, labelClass } from "@/components/ui";
 
 export const metadata = { title: "Sign in" };
 
@@ -88,7 +87,7 @@ export default async function LoginPage({
           <input type="hidden" name="next" value={params.next ?? ""} />
 
           <div>
-            <label className={authLabelClass} htmlFor="email">
+            <label className={labelClass} htmlFor="email">
               Email address
             </label>
             <input
@@ -98,13 +97,13 @@ export default async function LoginPage({
               required
               autoComplete="email"
               autoFocus
-              className={authInputClass}
+              className={inputClass}
               placeholder="you@example.co.za"
             />
           </div>
 
           <div>
-            <label className={authLabelClass} htmlFor="password">
+            <label className={labelClass} htmlFor="password">
               Password
             </label>
             <input
@@ -113,7 +112,7 @@ export default async function LoginPage({
               type="password"
               required
               autoComplete="current-password"
-              className={authInputClass}
+              className={inputClass}
               placeholder="••••••••"
             />
           </div>

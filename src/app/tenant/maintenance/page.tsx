@@ -102,7 +102,7 @@ function RequestTable({
             <Td>
               <Link
                 href={`/tenant/maintenance/${request.id}`}
-                className="text-brand-700 dark:text-brand-400 font-medium"
+                className="text-brand-700 font-medium"
               >
                 {request.reference}
               </Link>

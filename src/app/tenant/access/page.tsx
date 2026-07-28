@@ -66,20 +66,20 @@ export default async function AccessPage({
                 {active.map((code) => (
                   <li
                     key={code.id}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-3 dark:border-slate-800"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-3"
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <code className="bg-brand-50 text-brand-800 dark:bg-brand-950 dark:text-brand-200 rounded px-2 py-1 font-mono text-lg font-semibold tracking-widest">
+                        <code className="bg-brand-50 text-brand-800 rounded px-2 py-1 font-mono text-lg font-semibold tracking-widest">
                           {code.code}
                         </code>
                         <StatusBadge status={code.type} />
                       </div>
-                      <p className="mt-1 text-sm text-slate-700 dark:text-slate-300">
+                      <p className="mt-1 text-sm text-slate-700">
                         {code.visitor_name}
                         {code.vehicle_registration ? ` · ${code.vehicle_registration}` : ""}
                       </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-xs text-slate-500">
                         Valid until{" "}
                         {new Date(code.valid_until).toLocaleString("en-ZA", {
                           day: "numeric",

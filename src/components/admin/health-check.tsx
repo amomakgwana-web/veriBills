@@ -28,8 +28,8 @@ export function HealthCheckButton() {
           role="status"
           className={`mt-1 max-w-sm text-xs ${
             result.status === "success"
-              ? "text-brand-600 dark:text-brand-400"
-              : "text-red-600 dark:text-red-400"
+              ? "text-brand-600"
+              : "text-red-600"
           }`}
         >
           {result.message}

@@ -56,7 +56,7 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
         action={
           <Link
             href="/tenant/billing"
-            className="text-brand-700 dark:text-brand-400 text-sm font-medium"
+            className="text-brand-700 text-sm font-medium"
           >
             Back to billing
           </Link>
@@ -83,7 +83,7 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
                     <Td>
                       {line.description}
                       {line.reading_from !== null && line.reading_to !== null && (
-                        <span className="block text-xs text-slate-500 dark:text-slate-400">
+                        <span className="block text-xs text-slate-500">
                           Reading {formatNumber(line.reading_from, 1)} →{" "}
                           {formatNumber(line.reading_to, 1)}
                         </span>
@@ -161,8 +161,8 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
 
           {org && (
             <Card title="Billed by">
-              <address className="text-sm text-slate-600 not-italic dark:text-slate-400">
-                <strong className="block text-slate-800 dark:text-slate-200">{org.name}</strong>
+              <address className="text-sm text-slate-600 not-italic">
+                <strong className="block text-slate-800">{org.name}</strong>
                 {org.address_line1 && <span className="block">{org.address_line1}</span>}
                 {org.city && (
                   <span className="block">
@@ -182,8 +182,8 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <dt className="text-slate-500 dark:text-slate-400">{label}</dt>
-      <dd className="tabular text-slate-800 dark:text-slate-200">{children}</dd>
+      <dt className="text-slate-500">{label}</dt>
+      <dd className="tabular text-slate-800">{children}</dd>
     </div>
   );
 }

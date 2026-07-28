@@ -168,7 +168,7 @@ function Chip({
       className={
         active
           ? "bg-brand-700 rounded-full px-2.5 py-1 text-xs font-medium text-white"
-          : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
+          : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200"
       }
     >
       {label}

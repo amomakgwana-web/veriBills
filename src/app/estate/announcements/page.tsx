@@ -66,10 +66,10 @@ export default async function EstateAnnouncementsPage({
                   </span>
                 </div>
 
-                <h3 className="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                <h3 className="mt-2 text-sm font-semibold text-slate-900">
                   {item.title}
                 </h3>
-                <p className="mt-1 text-sm whitespace-pre-wrap text-slate-600 dark:text-slate-400">
+                <p className="mt-1 text-sm whitespace-pre-wrap text-slate-600">
                   {item.body}
                 </p>
               </Card>

@@ -46,7 +46,7 @@ export default async function ApplyPage() {
         title="Apply for a unit"
         description="Apartments, offices and retail space currently available."
         action={
-          <Link href="/" className="text-brand-700 dark:text-brand-400 text-sm font-medium">
+          <Link href="/" className="text-brand-700 text-sm font-medium">
             Back to portal
           </Link>
         }
@@ -115,7 +115,7 @@ export default async function ApplyPage() {
                   <tr key={unit.id}>
                     <Td>
                       {unit.unit_number}
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">
+                      <span className="block text-xs text-slate-500">
                         {(properties.data ?? []).find((p) => p.id === unit.property_id)?.name}
                       </span>
                     </Td>

@@ -125,16 +125,16 @@ export default async function TenantsPage({
               {filtered.map(({ account, lease, tenant, score }) => (
                 <tr key={account.id}>
                   <Td>
-                    <span className="font-medium text-slate-800 dark:text-slate-200">
+                    <span className="font-medium text-slate-800">
                       {tenant?.full_name ?? "Unassigned"}
                     </span>
-                    <span className="block text-xs text-slate-500 dark:text-slate-400">
+                    <span className="block text-xs text-slate-500">
                       {tenant?.email}
                     </span>
                   </Td>
                   <Td>
                     {lease?.units?.unit_number ?? "—"}
-                    <span className="block text-xs text-slate-500 dark:text-slate-400">
+                    <span className="block text-xs text-slate-500">
                       {lease?.units?.properties?.name}
                     </span>
                   </Td>
@@ -143,8 +143,8 @@ export default async function TenantsPage({
                     align="right"
                     className={
                       Number(account.balance) > 0
-                        ? "font-medium text-red-600 dark:text-red-400"
-                        : "text-brand-600 dark:text-brand-400"
+                        ? "font-medium text-red-600"
+                        : "text-brand-600"
                     }
                   >
                     {formatMoney(account.balance)}
@@ -188,7 +188,7 @@ export default async function TenantsPage({
                   <Td>
                     <Link
                       href={`/estate/tenants/${account.id}?org=${orgId}`}
-                      className="text-brand-700 dark:text-brand-400 text-xs font-medium"
+                      className="text-brand-700 text-xs font-medium"
                     >
                       Manage
                     </Link>
@@ -226,7 +226,7 @@ function FilterChip({
       className={
         active
           ? "bg-brand-700 rounded-full px-2.5 py-1 text-xs font-medium text-white"
-          : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
+          : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200"
       }
     >
       {label}

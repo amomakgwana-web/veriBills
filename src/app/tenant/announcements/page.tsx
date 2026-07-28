@@ -46,10 +46,10 @@ export default async function AnnouncementsPage() {
                 </span>
               </div>
 
-              <h2 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">
+              <h2 className="mt-2 text-base font-semibold text-slate-900">
                 {item.title}
               </h2>
-              <p className="mt-1.5 text-sm whitespace-pre-wrap text-slate-600 dark:text-slate-400">
+              <p className="mt-1.5 text-sm whitespace-pre-wrap text-slate-600">
                 {item.body}
               </p>
 
@@ -59,7 +59,7 @@ export default async function AnnouncementsPage() {
                     <li key={url}>
                       <a
                         href={url}
-                        className="text-brand-700 dark:text-brand-400 text-xs font-medium underline"
+                        className="text-brand-700 text-xs font-medium underline"
                       >
                         Attachment
                       </a>

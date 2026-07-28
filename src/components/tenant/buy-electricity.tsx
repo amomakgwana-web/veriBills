@@ -45,11 +45,11 @@ export function BuyElectricityForm({ meters }: { meters: MeterOption[] }) {
   if (state.status === "success" && state.token) {
     return (
       <div className="text-center">
-        <p className="text-sm text-slate-500 dark:text-slate-400">Your token</p>
-        <p className="my-3 rounded-lg bg-slate-100 px-3 py-4 font-mono text-lg tracking-wider text-slate-900 dark:bg-slate-800 dark:text-slate-100">
+        <p className="text-sm text-slate-500">Your token</p>
+        <p className="my-3 rounded-lg bg-slate-100 px-3 py-4 font-mono text-lg tracking-wider text-slate-900">
           {state.token}
         </p>
-        <p className="text-sm text-slate-600 dark:text-slate-400">
+        <p className="text-sm text-slate-600">
           {formatNumber(state.units, 2)} kWh. We have also sent this by SMS.
         </p>
         <a href="/tenant/electricity" className={`${buttonClass("secondary")} mt-4 w-full`}>
@@ -79,7 +79,7 @@ export function BuyElectricityForm({ meters }: { meters: MeterOption[] }) {
           ))}
         </select>
         {meter?.tariff && (
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{meter.tariff.name}</p>
+          <p className="mt-1 text-xs text-slate-500">{meter.tariff.name}</p>
         )}
       </div>
 
@@ -109,8 +109,8 @@ export function BuyElectricityForm({ meters }: { meters: MeterOption[] }) {
               onClick={() => setAmount(value)}
               className={
                 amount === value
-                  ? "bg-brand-700 rounded-full px-2.5 py-1 text-xs font-medium text-white"
-                  : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
+                  ? "bg-brand-700 rounded-full px-3.5 py-2 text-sm font-medium text-white"
+                  : "rounded-full bg-slate-100 px-3.5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200"
               }
             >
               R{value}
@@ -120,24 +120,24 @@ export function BuyElectricityForm({ meters }: { meters: MeterOption[] }) {
       </div>
 
       {quote && (
-        <div className="bg-brand-50 dark:bg-brand-950/40 rounded-lg px-3 py-2.5 text-sm">
+        <div className="bg-brand-50 rounded-lg px-3 py-2.5 text-sm">
           {quote.units > 0 ? (
             <>
               <div className="flex items-center justify-between">
-                <span className="text-slate-600 dark:text-slate-400">You will receive</span>
-                <span className="text-brand-800 dark:text-brand-200 font-semibold">
+                <span className="text-slate-600">You will receive</span>
+                <span className="text-brand-800 font-semibold">
                   {formatNumber(quote.units, 2)} kWh
                 </span>
               </div>
               <div className="mt-1 flex items-center justify-between text-xs">
-                <span className="text-slate-500 dark:text-slate-400">Effective rate</span>
-                <span className="tabular text-slate-600 dark:text-slate-300">
+                <span className="text-slate-500">Effective rate</span>
+                <span className="tabular text-slate-600">
                   {formatMoney(quote.rate)}/kWh
                 </span>
               </div>
             </>
           ) : (
-            <p className="text-red-700 dark:text-red-300">
+            <p className="text-red-700">
               This amount only covers the fixed charges. Increase it to buy units.
             </p>
           )}
@@ -147,7 +147,7 @@ export function BuyElectricityForm({ meters }: { meters: MeterOption[] }) {
       {state.status === "error" && (
         <p
           role="alert"
-          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300"
+          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
         >
           {state.message}
         </p>

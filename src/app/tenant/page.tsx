@@ -91,15 +91,15 @@ export default async function TenantOverview({
       />
 
       {plan && (
-        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900 dark:bg-red-950/40">
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-medium text-red-900 dark:text-red-200">
+              <p className="text-sm font-medium text-red-900">
                 {plan.status === "active"
                   ? "You are on a payment arrangement"
                   : "A payment arrangement has been proposed for you"}
               </p>
-              <p className="mt-0.5 text-sm text-red-800 dark:text-red-300">
+              <p className="mt-0.5 text-sm text-red-800">
                 {formatMoney(plan.instalment_amount)} × {plan.instalment_count} towards{" "}
                 {formatMoney(plan.arrears_amount)} of arrears.
               </p>
@@ -161,19 +161,19 @@ export default async function TenantOverview({
                   {humanise(alert.utility)}
                 </Badge>
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                  <p className="text-sm font-medium text-slate-800">
                     {alert.title}
                   </p>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">{alert.detail}</p>
+                  <p className="text-sm text-slate-500">{alert.detail}</p>
                 </div>
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-4 text-xs text-slate-500">
             A sudden jump often means a leaking toilet or dripping geyser.{" "}
             <Link
               href={`/tenant/maintenance/new?unit=${unit.unitId}`}
-              className="text-brand-700 dark:text-brand-400 font-medium"
+              className="text-brand-700 font-medium"
             >
               Log a maintenance request
             </Link>
@@ -188,7 +188,7 @@ export default async function TenantOverview({
           action={
             <Link
               href={`/tenant/billing?unit=${unit.unitId}`}
-              className="text-brand-700 dark:text-brand-400 text-xs font-medium"
+              className="text-brand-700 text-xs font-medium"
             >
               View all
             </Link>
@@ -211,7 +211,7 @@ export default async function TenantOverview({
                     <Td>
                       <Link
                         href={`/tenant/billing/${invoice.id}`}
-                        className="text-brand-700 dark:text-brand-400 font-medium"
+                        className="text-brand-700 font-medium"
                       >
                         {invoice.invoice_number}
                       </Link>
@@ -241,7 +241,7 @@ export default async function TenantOverview({
           action={
             <Link
               href="/tenant/announcements"
-              className="text-brand-700 dark:text-brand-400 text-xs font-medium"
+              className="text-brand-700 text-xs font-medium"
             >
               View all
             </Link>
@@ -263,10 +263,10 @@ export default async function TenantOverview({
                       })}
                     </span>
                   </div>
-                  <p className="mt-1.5 text-sm font-medium text-slate-800 dark:text-slate-200">
+                  <p className="mt-1.5 text-sm font-medium text-slate-800">
                     {item.title}
                   </p>
-                  <p className="line-clamp-2 text-sm text-slate-500 dark:text-slate-400">
+                  <p className="line-clamp-2 text-sm text-slate-500">
                     {item.body}
                   </p>
                 </li>
