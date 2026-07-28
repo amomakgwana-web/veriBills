@@ -186,6 +186,7 @@ export default async function BillingPage({
                     <Th align="right">Total</Th>
                     <Th align="right">Outstanding</Th>
                     <Th>Status</Th>
+                    <Th align="right">PDF</Th>
                   </tr>
                 </thead>
                 <tbody>
@@ -215,6 +216,15 @@ export default async function BillingPage({
                       <Td align="right">{formatMoney(invoice.amount_due)}</Td>
                       <Td>
                         <StatusBadge status={invoice.status} />
+                      </Td>
+                      <Td align="right">
+                        <a
+                          href={`/api/invoices/${invoice.id}/pdf`}
+                          className="text-brand-700 font-medium hover:underline"
+                          title={`Download ${invoice.invoice_number} as PDF`}
+                        >
+                          Download
+                        </a>
                       </Td>
                     </tr>
                   ))}
