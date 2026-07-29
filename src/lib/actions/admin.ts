@@ -5,8 +5,35 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireSystemAdmin } from "@/lib/auth/session";
 import { getMeterVendor } from "@/lib/integrations";
+import type { Database } from "@/lib/supabase/types";
 
 export type ActionState = { status: "idle" | "success" | "error"; message?: string };
+
+const TARIFF_UTILITIES = ["water", "electricity_prepaid", "electricity_conventional"] as const;
+
+type TariffBlockInput = { from: number; to: number | null; rate: number };
+
+/** Blocks travel from the client as JSON built by the row editor. */
+function parseBlocks(raw: string): TariffBlockInput[] | null {
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed) || parsed.length === 0) return null;
+
+    const blocks = parsed.map((b) => ({
+      from: Number(b.from),
+      to: b.to === null || b.to === "" || b.to === undefined ? null : Number(b.to),
+      rate: Number(b.rate),
+    }));
+
+    if (blocks.some((b) => !Number.isFinite(b.from) || !Number.isFinite(b.rate) || b.rate < 0)) {
+      return null;
+    }
+
+    return blocks;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Poll the AMI vendor for fresh reads on every active meter.
@@ -130,5 +157,123 @@ export async function runHealthCheck(): Promise<ActionState> {
       failing.length === 0
         ? `All ${checks.length} components healthy.`
         : `${failing.length} component${failing.length === 1 ? "" : "s"} unhealthy: ${failing.map((f) => f.component).join(", ")}.`,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Tariffs (water and electricity stepped block rates)
+// ---------------------------------------------------------------------------
+
+export async function createTariff(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireSystemAdmin();
+
+  const orgId = String(formData.get("org_id") ?? "");
+  const name = String(formData.get("name") ?? "").trim();
+  const utility = String(formData.get("utility") ?? "");
+  const fixedCharge = Number(formData.get("fixed_charge") ?? 0);
+  const vatRate = Number(formData.get("vat_rate") ?? 15) / 100;
+  const markupPercent = Number(formData.get("markup_percent") ?? 0);
+  const effectiveFrom = String(formData.get("effective_from") ?? "");
+  const blocks = parseBlocks(String(formData.get("blocks") ?? "[]"));
+
+  if (!orgId || !name) return { status: "error", message: "Give the tariff a name and organisation." };
+  if (!TARIFF_UTILITIES.includes(utility as (typeof TARIFF_UTILITIES)[number])) {
+    return { status: "error", message: "Choose a utility." };
+  }
+  if (!blocks) return { status: "error", message: "Add at least one valid rate block." };
+
+  const admin = createAdminClient();
+
+  const { data: tariff, error } = await admin
+    .from("tariffs")
+    .insert({
+      org_id: orgId,
+      name,
+      utility: utility as Database["public"]["Enums"]["meter_type"],
+      fixed_charge: fixedCharge,
+      vat_rate: vatRate,
+      markup_percent: markupPercent,
+      effective_from: effectiveFrom || new Date().toISOString().slice(0, 10),
+    })
+    .select("id")
+    .single();
+
+  if (error || !tariff) {
+    return { status: "error", message: error?.message ?? "Could not create the tariff." };
+  }
+
+  const { error: blocksError } = await admin.from("tariff_blocks").insert(
+    blocks.map((b, i) => ({
+      tariff_id: tariff.id,
+      sequence: i + 1,
+      block_from_units: b.from,
+      block_to_units: b.to,
+      rate_per_unit: b.rate,
+    })),
+  );
+
+  if (blocksError) {
+    // Don't leave a blockless tariff behind for calculate_tariff_cost to trip over.
+    await admin.from("tariffs").delete().eq("id", tariff.id);
+    return { status: "error", message: blocksError.message };
+  }
+
+  revalidatePath("/admin/tariffs");
+  revalidatePath("/admin/units");
+  return { status: "success", message: `Created ${name}.` };
+}
+
+export async function replaceTariffBlocks(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireSystemAdmin();
+
+  const tariffId = String(formData.get("tariff_id") ?? "");
+  const blocks = parseBlocks(String(formData.get("blocks") ?? "[]"));
+
+  if (!tariffId) return { status: "error", message: "Missing tariff." };
+  if (!blocks) return { status: "error", message: "Add at least one valid rate block." };
+
+  const admin = createAdminClient();
+
+  const { error: deleteError } = await admin.from("tariff_blocks").delete().eq("tariff_id", tariffId);
+  if (deleteError) return { status: "error", message: deleteError.message };
+
+  const { error: insertError } = await admin.from("tariff_blocks").insert(
+    blocks.map((b, i) => ({
+      tariff_id: tariffId,
+      sequence: i + 1,
+      block_from_units: b.from,
+      block_to_units: b.to,
+      rate_per_unit: b.rate,
+    })),
+  );
+
+  if (insertError) return { status: "error", message: insertError.message };
+
+  revalidatePath("/admin/tariffs");
+  revalidatePath("/admin/units");
+  return { status: "success", message: "Rate blocks updated." };
+}
+
+export async function setTariffActive(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireSystemAdmin();
+
+  const tariffId = String(formData.get("tariff_id") ?? "");
+  const isActive = formData.get("is_active") === "true";
+
+  if (!tariffId) return { status: "error", message: "Missing tariff." };
+
+  const admin = createAdminClient();
+  const { error } = await admin.from("tariffs").update({ is_active: isActive }).eq("id", tariffId);
+
+  if (error) return { status: "error", message: error.message };
+
+  revalidatePath("/admin/tariffs");
+  revalidatePath("/admin/units");
+  return {
+    status: "success",
+    message: isActive ? "Tariff activated." : "Tariff deactivated.",
   };
 }
