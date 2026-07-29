@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { SessionContext } from "@/lib/auth/session";
 import { SignOutButton } from "@/components/sign-out-button";
 import { ChatWidget } from "@/components/chat-widget";
+import { InactivityLogout } from "@/components/inactivity-logout";
 import { NavLink } from "@/components/nav-link";
 import { LogoMark } from "@/components/brand/logo-mark";
 import { cx } from "@/components/ui";
@@ -101,6 +102,7 @@ export function AppShell({
       <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
 
       <ChatWidget userName={session.fullName ?? session.email} />
+      <InactivityLogout />
     </div>
   );
 }

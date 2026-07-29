@@ -1,14 +1,5 @@
-import { redirect } from "next/navigation";
-
-import { createClient } from "@/lib/supabase/server";
+import { signOut } from "@/lib/actions/auth";
 import { buttonClass } from "@/components/ui";
-
-async function signOut() {
-  "use server";
-  const supabase = await createClient();
-  await supabase.auth.signOut();
-  redirect("/login");
-}
 
 export function SignOutButton({ className }: { className?: string }) {
   return (
