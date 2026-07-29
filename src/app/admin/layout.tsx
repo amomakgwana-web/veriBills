@@ -6,6 +6,7 @@ const NAV: NavItem[] = [
   { href: "/admin/organisations", label: "Organisations" },
   { href: "/admin/branding", label: "White labelling" },
   { href: "/admin/units", label: "Unit configuration" },
+  { href: "/admin/tariffs", label: "Tariffs" },
   { href: "/admin/meters", label: "Meters" },
   { href: "/admin/integrations", label: "Integrations" },
   { href: "/admin/deliveries", label: "Delivery trail" },
