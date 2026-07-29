@@ -2485,6 +2485,118 @@ export type Database = {
           },
         ]
       }
+      legal_case_events: {
+        Row: {
+          actor: string | null
+          case_id: string
+          created_at: string
+          from_stage: Database["public"]["Enums"]["legal_case_stage"] | null
+          id: string
+          note: string | null
+          to_stage: Database["public"]["Enums"]["legal_case_stage"]
+        }
+        Insert: {
+          actor?: string | null
+          case_id: string
+          created_at?: string
+          from_stage?: Database["public"]["Enums"]["legal_case_stage"] | null
+          id?: string
+          note?: string | null
+          to_stage: Database["public"]["Enums"]["legal_case_stage"]
+        }
+        Update: {
+          actor?: string | null
+          case_id?: string
+          created_at?: string
+          from_stage?: Database["public"]["Enums"]["legal_case_stage"] | null
+          id?: string
+          note?: string | null
+          to_stage?: Database["public"]["Enums"]["legal_case_stage"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_case_events_actor_fkey"
+            columns: ["actor"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "legal_case_events_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "legal_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legal_cases: {
+        Row: {
+          account_id: string
+          amount: number
+          created_at: string
+          id: string
+          notes: string | null
+          opened_at: string
+          opened_by: string | null
+          org_id: string
+          reference: string
+          resolved_at: string | null
+          stage: Database["public"]["Enums"]["legal_case_stage"]
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          amount: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opened_by?: string | null
+          org_id: string
+          reference: string
+          resolved_at?: string | null
+          stage?: Database["public"]["Enums"]["legal_case_stage"]
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          amount?: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opened_by?: string | null
+          org_id?: string
+          reference?: string
+          resolved_at?: string | null
+          stage?: Database["public"]["Enums"]["legal_case_stage"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_cases_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "legal_cases_opened_by_fkey"
+            columns: ["opened_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "legal_cases_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organisations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       maintenance_comments: {
         Row: {
           attachment_urls: string[]
@@ -3963,6 +4075,7 @@ export type Database = {
       tenant_accounts: {
         Row: {
           account_number: string
+          assigned_collector_id: string | null
           balance: number
           created_at: string
           current_due: number
@@ -3981,6 +4094,7 @@ export type Database = {
         }
         Insert: {
           account_number: string
+          assigned_collector_id?: string | null
           balance?: number
           created_at?: string
           current_due?: number
@@ -3999,6 +4113,7 @@ export type Database = {
         }
         Update: {
           account_number?: string
+          assigned_collector_id?: string | null
           balance?: number
           created_at?: string
           current_due?: number
@@ -4016,6 +4131,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "tenant_accounts_assigned_collector_id_fkey"
+            columns: ["assigned_collector_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "tenant_accounts_lease_id_fkey"
             columns: ["lease_id"]
@@ -5831,6 +5953,7 @@ export type Database = {
         | "terminated"
         | "cancelled"
       ledger_direction: "debit" | "credit"
+      legal_case_stage: "intake" | "demand" | "filed" | "court" | "resolved"
       maintenance_priority: "low" | "normal" | "high" | "emergency"
       maintenance_status:
         | "logged"
@@ -6180,6 +6303,7 @@ export const Constants = {
         "cancelled",
       ],
       ledger_direction: ["debit", "credit"],
+      legal_case_stage: ["intake", "demand", "filed", "court", "resolved"],
       maintenance_priority: ["low", "normal", "high", "emergency"],
       maintenance_status: [
         "logged",

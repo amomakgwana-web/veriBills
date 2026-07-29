@@ -10,6 +10,7 @@ import { splitInstalments, fromCents, toCents, formatMoney } from "@/lib/domain/
 import { dispatch, renderBrandedEmail } from "@/lib/actions/notifications";
 import { escapeHtml } from "@/lib/html";
 import { getDebiCheckProvider } from "@/lib/integrations";
+import { humanise } from "@/components/ui";
 import type { Database } from "@/lib/supabase/types";
 
 export type ActionState = { status: "idle" | "success" | "error"; message?: string };
@@ -751,6 +752,295 @@ export async function runCollections(
     return {
       status: "success",
       message: `Collected ${formatMoney(total)} from ${successful} mandate${successful === 1 ? "" : "s"}${failed ? `, ${failed} failed` : ""}.`,
+    };
+  } catch (error) {
+    return { status: "error", message: (error as Error).message };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Arrears recovery
+// ---------------------------------------------------------------------------
+
+export async function assignCollector(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const orgId = String(formData.get("org_id") ?? "");
+  const accountId = String(formData.get("account_id") ?? "");
+  const collectorId = String(formData.get("collector_id") ?? "");
+
+  if (!orgId || !accountId) return { status: "error", message: "Missing account." };
+
+  try {
+    await assertRole(orgId, ["admin", "finance", "manager"]);
+    const supabase = await createClient();
+
+    const { error } = await supabase
+      .from("tenant_accounts")
+      .update({ assigned_collector_id: collectorId || null })
+      .eq("id", accountId)
+      .eq("org_id", orgId);
+
+    if (error) return { status: "error", message: error.message };
+
+    revalidatePath("/estate/arrears");
+    return {
+      status: "success",
+      message: collectorId ? "Collector assigned." : "Collector cleared.",
+    };
+  } catch (error) {
+    return { status: "error", message: (error as Error).message };
+  }
+}
+
+/** Email a tenant a reminder of their current balance. */
+export async function sendArrearsReminder(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const orgId = String(formData.get("org_id") ?? "");
+  const accountId = String(formData.get("account_id") ?? "");
+
+  if (!orgId || !accountId) return { status: "error", message: "Missing account." };
+
+  try {
+    await assertRole(orgId, ["admin", "finance", "manager"]);
+    const admin = createAdminClient();
+
+    const { data: account } = await admin
+      .from("tenant_accounts")
+      .select(
+        "id, balance, account_number, leases(lease_tenants(profile_id, is_primary, profiles(email, full_name, notify_email)))",
+      )
+      .eq("id", accountId)
+      .eq("org_id", orgId)
+      .maybeSingle();
+
+    if (!account) return { status: "error", message: "Account not found." };
+
+    const lease = account.leases as {
+      lease_tenants: Array<{
+        profile_id: string;
+        is_primary: boolean;
+        profiles: { email: string; full_name: string | null; notify_email: boolean } | null;
+      }>;
+    } | null;
+
+    const primary = lease?.lease_tenants.find((t) => t.is_primary) ?? lease?.lease_tenants[0];
+
+    if (!primary?.profiles?.email) {
+      return { status: "error", message: "No tenant email on file for this account." };
+    }
+
+    const html = await renderBrandedEmail(
+      orgId,
+      "Your account is overdue",
+      `<p>Hi ${escapeHtml(primary.profiles.full_name ?? "there")},</p>
+       <p>Our records show <strong>${formatMoney(account.balance)}</strong> outstanding on
+       account ${escapeHtml(account.account_number)}.</p>
+       <p>Please settle this as soon as possible, or log in to your veriBills portal to
+       request a payment plan.</p>`,
+    );
+
+    const sent = await dispatch({
+      orgId,
+      channel: "email",
+      to: primary.profiles.email,
+      subject: "Overdue balance reminder",
+      body: html,
+      templateKey: "arrears_reminder",
+      profileId: primary.profile_id,
+      accountId,
+    });
+
+    if (!sent) return { status: "error", message: "Could not send the reminder." };
+
+    revalidatePath("/estate/arrears");
+    return { status: "success", message: "Reminder sent." };
+  } catch (error) {
+    return { status: "error", message: (error as Error).message };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Legal escalation
+// ---------------------------------------------------------------------------
+
+/** Open a legal matter for a severely delinquent account, starting at Intake. */
+export async function escalateToLegal(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const orgId = String(formData.get("org_id") ?? "");
+  const accountId = String(formData.get("account_id") ?? "");
+  const notes = String(formData.get("notes") ?? "").trim();
+
+  if (!orgId || !accountId) return { status: "error", message: "Missing account." };
+
+  try {
+    const session = await assertRole(orgId, ["admin", "finance", "manager"]);
+    const admin = createAdminClient();
+
+    const { data: account } = await admin
+      .from("tenant_accounts")
+      .select("id, balance")
+      .eq("id", accountId)
+      .eq("org_id", orgId)
+      .maybeSingle();
+
+    if (!account) return { status: "error", message: "Account not found." };
+    if (Number(account.balance) <= 0) {
+      return { status: "error", message: "This account has no outstanding balance." };
+    }
+
+    const { data: reference } = await admin.rpc("next_sequence_number", {
+      p_org: orgId,
+      p_kind: "legal_case",
+      p_prefix: "LX",
+    });
+
+    const { data: legalCase, error } = await admin
+      .from("legal_cases")
+      .insert({
+        org_id: orgId,
+        account_id: accountId,
+        reference: reference ?? `LX-${randomUUID().slice(0, 8).toUpperCase()}`,
+        amount: account.balance,
+        notes: notes || null,
+        opened_by: session.userId,
+      })
+      .select("id, reference")
+      .single();
+
+    if (error || !legalCase) {
+      return { status: "error", message: error?.message ?? "Could not open the matter." };
+    }
+
+    await admin.from("legal_case_events").insert({
+      case_id: legalCase.id,
+      from_stage: null,
+      to_stage: "intake",
+      note: notes || "Escalated from arrears.",
+      actor: session.userId,
+    });
+
+    revalidatePath("/estate/arrears");
+    revalidatePath("/estate/legal");
+    return { status: "success", message: `Opened matter ${legalCase.reference}.` };
+  } catch (error) {
+    return { status: "error", message: (error as Error).message };
+  }
+}
+
+const LEGAL_STAGES = ["intake", "demand", "filed", "court", "resolved"] as const;
+
+export async function moveLegalCaseStage(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const orgId = String(formData.get("org_id") ?? "");
+  const caseId = String(formData.get("case_id") ?? "");
+  const toStage = String(formData.get("to_stage") ?? "");
+  const note = String(formData.get("note") ?? "").trim();
+
+  if (!orgId || !caseId || !LEGAL_STAGES.includes(toStage as (typeof LEGAL_STAGES)[number])) {
+    return { status: "error", message: "Invalid request." };
+  }
+
+  try {
+    const session = await assertRole(orgId, ["admin", "finance", "manager"]);
+    const admin = createAdminClient();
+
+    const { data: current } = await admin
+      .from("legal_cases")
+      .select("stage")
+      .eq("id", caseId)
+      .eq("org_id", orgId)
+      .maybeSingle();
+
+    if (!current) return { status: "error", message: "Matter not found." };
+
+    const stage = toStage as Database["public"]["Enums"]["legal_case_stage"];
+
+    const { error } = await admin
+      .from("legal_cases")
+      .update({
+        stage,
+        resolved_at: stage === "resolved" ? new Date().toISOString() : null,
+      })
+      .eq("id", caseId);
+
+    if (error) return { status: "error", message: error.message };
+
+    await admin.from("legal_case_events").insert({
+      case_id: caseId,
+      from_stage: current.stage,
+      to_stage: stage,
+      note: note || null,
+      actor: session.userId,
+    });
+
+    revalidatePath("/estate/legal");
+    return { status: "success", message: `Moved to ${humanise(stage)}.` };
+  } catch (error) {
+    return { status: "error", message: (error as Error).message };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Payment plan management
+// ---------------------------------------------------------------------------
+
+/** Cancel a pending plan, or mark an active one as defaulted. */
+export async function updatePaymentPlanStatus(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const orgId = String(formData.get("org_id") ?? "");
+  const planId = String(formData.get("plan_id") ?? "");
+  const nextStatus = String(formData.get("status") ?? "");
+
+  if (!orgId || !planId || !["cancelled", "defaulted"].includes(nextStatus)) {
+    return { status: "error", message: "Invalid request." };
+  }
+
+  try {
+    await assertRole(orgId, ["admin", "finance", "manager"]);
+    const admin = createAdminClient();
+
+    const { data: plan } = await admin
+      .from("payment_plans")
+      .select("status, account_id")
+      .eq("id", planId)
+      .eq("org_id", orgId)
+      .maybeSingle();
+
+    if (!plan) return { status: "error", message: "Plan not found." };
+    if (!["active", "awaiting_acceptance", "proposed"].includes(plan.status)) {
+      return { status: "error", message: "Only active or pending plans can be changed." };
+    }
+
+    const { error } = await admin
+      .from("payment_plans")
+      .update({
+        status: nextStatus as Database["public"]["Enums"]["payment_plan_status"],
+        defaulted_at: nextStatus === "defaulted" ? new Date().toISOString() : null,
+      })
+      .eq("id", planId);
+
+    if (error) return { status: "error", message: error.message };
+
+    await admin
+      .from("tenant_accounts")
+      .update({ is_on_payment_plan: false })
+      .eq("id", plan.account_id);
+
+    revalidatePath("/estate/payment-plans");
+    revalidatePath("/estate/tenants");
+    return {
+      status: "success",
+      message: nextStatus === "cancelled" ? "Plan cancelled." : "Plan marked as defaulted.",
     };
   } catch (error) {
     return { status: "error", message: (error as Error).message };
